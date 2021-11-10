@@ -12,6 +12,7 @@
   <modules>
     <module>poker-server</module>
     <module>poker-client</module>
+    <module>poker-common</module>
   </modules>
 
   <name>socketPoker</name>
@@ -34,6 +35,11 @@
       <dependency>
         <groupId>poker.socket.java</groupId>
         <artifactId>poker-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>poker.socket.java</groupId>
+        <artifactId>poker-common</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

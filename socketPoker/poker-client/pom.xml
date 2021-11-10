@@ -29,6 +29,10 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>poker.socket.java</groupId>
+      <artifactId>poker-common</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
