@@ -3,50 +3,28 @@ package poker.socket.java;
 import java.io.*;
 import java.net.*;
 
-/**
- * Hello world!
- *
- */
-public class Server
-{
-    public static void main( String[] args ) throws IOException
+public class Server {
+    public static void main(String[] args) throws IOException
     {
         InetAddress host = InetAddress.getLocalHost();
         String hostName = host.getHostName();
         System.out.println( "Server " + hostName + " welcomes You!" );
+
         if (args.length != 1) {
-            System.err.println("Usage: java KnockKnockServer <port number>");
+            System.err.println("Usage: java KKMultiServer <port number>");
             System.exit(1);
         }
 
         int portNumber = Integer.parseInt(args[0]);
+        boolean listening = true;
 
-        try (
-                ServerSocket serverSocket = new ServerSocket(portNumber);
-                Socket clientSocket = serverSocket.accept();
-                PrintWriter out =
-                        new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()));
-        ) {
-
-            String inputLine, outputLine;
-
-            // Initiate conversation with client
-            Protocol kkp = new Protocol();
-            outputLine = kkp.processInput(null);
-            out.println(outputLine);
-
-            while ((inputLine = in.readLine()) != null) {
-                outputLine = kkp.processInput(inputLine);
-                out.println(outputLine);
-                if (outputLine.equals("Bye."))
-                    break;
+        try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
+            while (listening) {
+                new ServerThread(serverSocket.accept()).start();
             }
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port "
-                    + portNumber + " or listening for a connection");
-            System.out.println(e.getMessage());
+            System.err.println("Could not listen on port " + portNumber);
+            System.exit(-1);
         }
     }
 }

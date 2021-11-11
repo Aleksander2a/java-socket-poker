@@ -3,10 +3,10 @@ package poker.socket.java;
 import java.net.*;
 import java.io.*;
 
-public class MultiServerThread extends Thread{
+public class ServerThread extends Thread{
     private Socket socket = null;
 
-    public MultiServerThread(Socket socket) {
+    public ServerThread(Socket socket) {
         //super();
         this.socket = socket;
     }
