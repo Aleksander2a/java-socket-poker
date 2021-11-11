@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 /**
- * Hello world!
+ * The main class on the Client-side of the app.
  *
  */
 public class Client
@@ -13,7 +13,7 @@ public class Client
     {
         if (args.length != 2) {
             System.err.println(
-                    "Usage: java EchoClient <host name> <port number>");
+                    "Usage: java -jar <file-jar-with-dependencies> <host name> <port number>");
             System.exit(1);
         }
 
@@ -21,25 +21,25 @@ public class Client
         int portNumber = Integer.parseInt(args[1]);
 
         try (
-                Socket kkSocket = new Socket(hostName, portNumber);
-                PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+                Socket socket = new Socket(hostName, portNumber);
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(kkSocket.getInputStream()));
+                        new InputStreamReader(socket.getInputStream()));
         ) {
             BufferedReader stdIn =
                     new BufferedReader(new InputStreamReader(System.in));
             String fromServer;
-            String fromUser;
+            String fromClient;
 
             while ((fromServer = in.readLine()) != null) {
                 System.out.println("Server: " + fromServer);
                 if (fromServer.equals("Bye."))
                     break;
 
-                fromUser = stdIn.readLine();
-                if (fromUser != null) {
-                    System.out.println("Client: " + fromUser);
-                    out.println(fromUser);
+                fromClient = stdIn.readLine(); //Read input from Client
+                if (fromClient != null) {
+                    System.out.println("Client: " + fromClient);
+                    out.println(fromClient);
                 }
             }
         } catch (UnknownHostException e) {

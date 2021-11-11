@@ -20,12 +20,12 @@ public class ServerThread extends Thread{
                                 socket.getInputStream()));
         ) {
             String inputLine, outputLine;
-            Protocol kkp = new Protocol();
-            outputLine = kkp.processInput(null);
+            Protocol protocol = new Protocol();
+            outputLine = protocol.processInput(null);
             out.println(outputLine);
 
             while ((inputLine = in.readLine()) != null) {
-                outputLine = kkp.processInput(inputLine);
+                outputLine = protocol.processInput(inputLine);
                 out.println(outputLine);
                 if (outputLine.equals("Bye"))
                     break;
