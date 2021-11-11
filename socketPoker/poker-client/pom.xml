@@ -56,7 +56,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>poker.socket.java.Main</mainClass>
+              <mainClass>poker.socket.java.Client</mainClass>
             </manifest>
           </archive>
         </configuration>
