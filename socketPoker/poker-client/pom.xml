@@ -33,6 +33,10 @@
       <groupId>poker.socket.java</groupId>
       <artifactId>poker-common</artifactId>
     </dependency>
+    <dependency>
+      <groupId>poker.socket.java</groupId>
+      <artifactId>poker-model</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

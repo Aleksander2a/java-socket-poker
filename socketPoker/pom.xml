@@ -13,6 +13,7 @@
     <module>poker-server</module>
     <module>poker-client</module>
     <module>poker-common</module>
+    <module>poker-model</module>
   </modules>
 
   <name>socketPoker</name>
@@ -40,6 +41,11 @@
       <dependency>
         <groupId>poker.socket.java</groupId>
         <artifactId>poker-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>poker.socket.java</groupId>
+        <artifactId>poker-model</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
