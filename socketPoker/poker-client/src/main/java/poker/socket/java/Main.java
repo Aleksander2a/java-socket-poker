@@ -13,7 +13,7 @@ public class Main
         //wywołanie metody generującej hash SHA-512
         System.out.println("HASH 512 dla słowa test: " + TextUtils.sha512Hash("test"));
         Deck deck = new Deck();
-        deck.writeDeck();
+        deck.printDeck();
         System.out.println(deck.getDeckSize());
         //System.out.println(Card.Rank.KING.compareTo(Card.Rank.ACE));
         Card randomCard = deck.dealCard();

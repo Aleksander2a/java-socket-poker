@@ -3,6 +3,9 @@ package poker.socket.java;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * A class to represent a deck of cards in the game
+ */
 public class Deck {
     private ArrayList<Card> cards = new ArrayList<>();
 
@@ -51,7 +54,10 @@ public class Deck {
 
     public int getDeckSize() {return cards.size();}
 
-     public void writeDeck() {
+    /**
+     * Prints out all cards in the Deck
+     */
+     public void printDeck() {
          for(Card card : cards) {
              System.out.println(card.toString());
          }
