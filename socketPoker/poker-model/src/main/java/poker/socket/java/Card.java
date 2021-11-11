@@ -21,7 +21,7 @@ public class Card
     /**
      * Possible card colors (4 of them)
      */
-    public static enum Suit {
+    public enum Suit {
         CLUBS, DIAMONDS, HEARTS, SPADES
     }
 
