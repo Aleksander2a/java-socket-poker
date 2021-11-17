@@ -9,6 +9,7 @@ public class Game {
     private int id;
     private int ante;
     private int playersNumber;
+    private int startingMoney;
     private ArrayList<Player> players;
 
     public Game() {}
@@ -23,4 +24,14 @@ public class Game {
             player.setCurrentGameId(id);
         }
     }
+
+    public void setId(int gameId) {this.id = gameId;}
+
+    public void setAnte(int gameAnte) {this.ante = gameAnte;}
+
+    public void setPlayersNumber(int maxPlayers) {this.playersNumber = maxPlayers;}
+
+    public void setStartingMoney(int money) {this.startingMoney = money;}
+
+    public int getStartingMoney() {return startingMoney;}
 }

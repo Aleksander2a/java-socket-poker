@@ -2,6 +2,7 @@ package poker.socket.java;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Protocol {
     private static final int WAITING = 0;
@@ -11,7 +12,11 @@ public class Protocol {
 
     private static final int NUMJOKES = 5;
 
-    private int state = WAITING;
+    public enum State {
+        ENTERED, JOINING_GAME, CREATING_GAME, SET_START_MONEY, SET_ANTE, JOIN_OR_CREATE_GAME, WAITING_FOR_GAME, IN_GAME
+    }
+
+    public int state = WAITING;
     private int currentJoke = 0;
 
     private String[] clues = { "Turnip", "Little Old Lady", "Atch", "Who", "Who" };
@@ -23,6 +28,32 @@ public class Protocol {
 
     public String processInput(String theInput) {
         String theOutput = null;
+
+//        switch (state) {
+//            case ENTERED:
+//                Player player = new Player(Server.nextPlayerId);
+//                Server.nextPlayerId++;
+//                theOutput = "Welcome! Your ID is: " + String.valueOf(player.getId()) + ". ";
+//                if(Server.games.isEmpty()) {
+//                    theOutput += "There are no games right now. How many players do You want for next game? (2-4)";
+//                    state = State.CREATING_GAME;
+//                }
+//                else {
+//                    theOutput += "There are currently " + String.valueOf(Server.games.size()) + "games. Do you want to join game or create a game? (join/create)";
+//                    state = State.JOIN_OR_CREATE_GAME;
+//                }
+//                break;
+//            case CREATING_GAME:
+//                Game game = new Game();
+//                game.setId(Server.nextGameId++);
+//                game.setPlayersNumber(Integer.parseInt(theInput));
+//                theOutput = "How much money do you want for start?";
+//                state = State.SET_START_MONEY;
+//                break;
+//            case SET_START_MONEY:
+//
+//                break;
+//        }
 
         if (state == WAITING) {
             theOutput = "Knock! Knock!";

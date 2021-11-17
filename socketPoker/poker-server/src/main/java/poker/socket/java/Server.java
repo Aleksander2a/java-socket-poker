@@ -2,8 +2,13 @@ package poker.socket.java;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Server {
+    public static int nextPlayerId = 0;
+    public static int nextGameId = 0;
+    public static ArrayList<Game> games = new ArrayList<>();
+
     public static void main(String[] args) throws IOException
     {
         InetAddress host = InetAddress.getLocalHost();
