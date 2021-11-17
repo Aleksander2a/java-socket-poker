@@ -38,10 +38,15 @@ public class Hand {
             for(int j=0; j<5; j++) {
                 if(playerCards.get(j).getRank()==playerCards.get(i).getRank() && !playerCards.get(j).equals(playerCards.get(i))) {
                     ranking = Ranking.ONE_PAIR;
-                    kicker = leadingCard;
                     leadingCard = playerCards.get(j);
                     toReturn = true;
                 }
+            }
+        }
+        for(int i=4; i>=0; i--) {
+            if(playerCards.get(i).getRank() != leadingCard.getRank()) {
+                kicker = playerCards.get(i);
+                break;
             }
         }
         return toReturn;
@@ -50,17 +55,17 @@ public class Hand {
     public boolean hasTwoPairs() {
         boolean toReturn = false;
         int countOfPairs = 0;
-        Card.Rank pairOne = null;
-        Card.Rank pairTwo = null;
+        Card pairOne = null;
+        Card pairTwo = null;
         for(int i=0; i<5; i++) {
             for(int j=0; j<5; j++) {
                 if(playerCards.get(j).getRank()==playerCards.get(i).getRank() && !playerCards.get(j).equals(playerCards.get(i))) {
                     if(pairOne == null) {
-                        pairOne = playerCards.get(j).getRank();
+                        pairOne = playerCards.get(j);
                         countOfPairs++;
                     }
-                    if(countOfPairs == 1 && playerCards.get(j).getRank() != pairOne && pairOne != null) {
-                        pairTwo = playerCards.get(j).getRank();
+                    if(countOfPairs == 1 && playerCards.get(j).getRank() != pairOne.getRank() && pairOne != null) {
+                        pairTwo = playerCards.get(j);
                         countOfPairs++;
                         ranking = Ranking.TWO_PAIRS;
                         kicker = leadingCard;
@@ -69,8 +74,17 @@ public class Hand {
                 }
             }
         }
+        if(pairTwo != null) {
+            if(pairTwo.compareRankWith(pairOne) > 0) {
+                leadingCard = pairTwo;
+                kicker = pairOne;
+            }
+            else {
+                leadingCard = pairOne;
+                kicker = pairTwo;
+            }
+        }
         return pairTwo != null;
-        //return toReturn;
     }
 
     public boolean hasThreeOfAKind() {
@@ -82,7 +96,6 @@ public class Hand {
                     countOfCard++;
                     if(countOfCard==3) {
                         ranking = Ranking.THREE_OF_A_KIND;
-                        kicker = leadingCard;
                         leadingCard = playerCards.get(j);
                         toReturn = true;
                     }
@@ -90,20 +103,39 @@ public class Hand {
             }
             countOfCard = 0;
         }
+        for(int i=4; i>=0; i--) {
+            if(playerCards.get(i).getRank() != leadingCard.getRank()) {
+                kicker = playerCards.get(i);
+                break;
+            }
+        }
         return toReturn;
     }
 
     public boolean hasStraight() {
-        // TODO: think of an ACE !!!
-        for(int i=0; i<4; i++) {
-            if(playerCards.get(i+1).getRank().ordinal()-playerCards.get(i).getRank().ordinal() != 1) {
-                return false;
+        boolean toReturn = true;
+        // Except case with ACE
+        if(playerCards.get(4).getRank() != Card.Rank.ACE || playerCards.get(0).getRank() != Card.Rank.TWO) {
+            for(int i=0; i<4; i++) {
+                if(playerCards.get(i+1).getRank().ordinal()-playerCards.get(i).getRank().ordinal() != 1) {
+                    toReturn = false;
+                }
             }
         }
-        ranking = Ranking.STRAIGHT;
+        // Case with an ACE !!!
+        if(playerCards.get(4).getRank() == Card.Rank.ACE && playerCards.get(0).getRank() == Card.Rank.TWO) {
+            for(int i=0; i<3; i++) {
+                if(playerCards.get(i+1).getRank().ordinal()-playerCards.get(i).getRank().ordinal() != 1) {
+                    toReturn = false;
+                }
+            }
+        }
+        if(toReturn == true) {
+            ranking = Ranking.STRAIGHT;
             leadingCard = playerCards.get(4);
             kicker = playerCards.get(3);
-        return true;
+        }
+        return toReturn;
     }
 
     public boolean hasFlush() {
@@ -121,26 +153,50 @@ public class Hand {
 
     //// TODO:
     boolean hasFullHouse() {
-        return (hasOnePair() && hasThreeOfAKind());
+        if(hasOnePair()) {
+            Card pair = leadingCard;
+            if(hasThreeOfAKind()) {
+                Card three = leadingCard;
+                if(three.compareRankWith(pair) != 0) {
+                    ranking = Ranking.FULL_HOUSE;
+                    leadingCard = three;
+                    kicker = pair;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     ////
 
     boolean hasFourOfAKind() {
-        Card.Rank first = playerCards.get(0).getRank();
-        Card.Rank different = null;
+        Card first = playerCards.get(0);
+        int firstCount = 1;
+        Card different = null;
+        int differentCount = 0;
         for(int i=1; i<5; i++) {
-            if(playerCards.get(i).getRank() != first) {
+            if(playerCards.get(i).getRank() != first.getRank()) {
                 if(different == null) {
-                    different = playerCards.get(i).getRank();
+                    different = playerCards.get(i);
+                    differentCount++;
                 }
-                else if(playerCards.get(i).getRank() != different) {
+                else if(playerCards.get(i).getRank() != different.getRank()) {
                     return false;
                 }
             }
+            else {
+                firstCount++;
+            }
         }
         ranking = Ranking.FOUR_OF_A_KIND;
-        leadingCard = playerCards.get(4);
-        kicker = playerCards.get(3);
+        if(firstCount > differentCount) {
+            leadingCard = first;
+            kicker = different;
+        }
+        else {
+            leadingCard = different;
+            kicker = first;
+        }
         return true;
     }
 

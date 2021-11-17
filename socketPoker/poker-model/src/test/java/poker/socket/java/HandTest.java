@@ -10,10 +10,10 @@ public class HandTest {
 
     @Test
     void hasOnePairTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
 
 //        for(int i=0; i<5; i++) {
@@ -29,7 +29,7 @@ public class HandTest {
 
     @Test
     void hasOnePairFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.SIX, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.DIAMONDS));
@@ -48,10 +48,10 @@ public class HandTest {
 
     @Test
     void hasTwoPairsTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.HEARTS));
         player.setHand();
         player.printCards();
@@ -62,10 +62,10 @@ public class HandTest {
 
     @Test
     void hasTwoPairsFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.HEARTS));
         player.setHand();
         player.printCards();
@@ -76,10 +76,10 @@ public class HandTest {
 
     @Test
     void hasThreeOfAKindTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.HEARTS));
         player.setHand();
         player.printCards();
@@ -90,9 +90,9 @@ public class HandTest {
 
     @Test
     void hasThreeOfAKindFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.HEARTS));
         player.setHand();
@@ -104,7 +104,7 @@ public class HandTest {
 
     @Test
     void hasStraightTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.SIX, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.DIAMONDS));
@@ -117,8 +117,22 @@ public class HandTest {
     }
 
     @Test
+    void hasStraightTrueWithAceTest() {
+        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
+        player.addCard(new Card(Card.Rank.THREE, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.FOUR, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.ACE, Card.Suit.HEARTS));
+        player.setHand();
+        player.printCards();
+        Hand hand = player.getHand();
+        System.out.println(hand.hasStraight() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
+        assertTrue(hand.hasStraight());
+    }
+
+    @Test
     void hasStraightFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.QUEEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.DIAMONDS));
@@ -132,7 +146,7 @@ public class HandTest {
 
     @Test
     void hasFlushTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.JACK, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.QUEEN, Card.Suit.HEARTS));
@@ -146,7 +160,7 @@ public class HandTest {
 
     @Test
     void hasFlushFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.QUEEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.DIAMONDS));
@@ -160,8 +174,8 @@ public class HandTest {
 
     @Test
     void hasFullHouseTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.FOUR, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.SPADES));
@@ -174,7 +188,7 @@ public class HandTest {
 
     @Test
     void hasFullHouseFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.NINE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.CLUBS));
@@ -188,10 +202,10 @@ public class HandTest {
 
     @Test
     void hasFourOfAKindTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.DIAMONDS));
+        player.addCard(new Card(Card.Rank.TEN, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.TEN, Card.Suit.SPADES));
+        player.addCard(new Card(Card.Rank.TEN, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.TEN, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.HEARTS));
         player.setHand();
         player.printCards();
@@ -202,9 +216,9 @@ public class HandTest {
 
     @Test
     void hasFourOfAKindFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.TWO, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.HEARTS));
         player.setHand();
@@ -216,7 +230,7 @@ public class HandTest {
 
     @Test
     void hasStraightFlushTrueTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.SIX, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
@@ -230,9 +244,9 @@ public class HandTest {
 
     @Test
     void hasStraightFlushFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.NINE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.NINE, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.HEARTS));
         player.setHand();
@@ -258,9 +272,9 @@ public class HandTest {
 
     @Test
     void hasRoyalFlushFalseTest() {
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.HEARTS));
+        player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ONE, Card.Suit.CLUBS));
+        player.addCard(new Card(Card.Rank.TWO, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.HEARTS));
         player.setHand();

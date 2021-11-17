@@ -15,7 +15,7 @@ public class Card
      * Possible card values (from ONE to ACE)
      */
     public enum Rank {
-        ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
+        TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
     }
 
     /**
