@@ -102,8 +102,7 @@ public class Player {
     public void setHand() {
         sortCards();
         hand = new Hand(cards);
-
-        //for(int i=0; )
+        hand.hasHand();
     }
 
     public Hand getHand() {

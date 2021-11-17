@@ -68,8 +68,6 @@ public class Hand {
                         pairTwo = playerCards.get(j);
                         countOfPairs++;
                         ranking = Ranking.TWO_PAIRS;
-                        kicker = leadingCard;
-                        leadingCard = playerCards.get(j);
                     }
                 }
             }
@@ -220,5 +218,24 @@ public class Hand {
         return false;
     }
 
+    public void hasHand() {
+        hasOnePair();
+        hasTwoPairs();
+        hasThreeOfAKind();
+        hasStraight();
+        hasFlush();
+        hasFullHouse();
+        hasFourOfAKind();
+        hasStraightFlush();
+        hasRoyalFlush();
+    }
 
+    @Override
+    public String toString() {
+        return "Hand{" +
+                "ranking=" + ranking +
+                ", leadingCard=" + leadingCard +
+                ", kicker=" + kicker +
+                '}';
+    }
 }

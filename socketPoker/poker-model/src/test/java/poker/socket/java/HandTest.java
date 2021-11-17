@@ -283,4 +283,16 @@ public class HandTest {
         System.out.println(hand.hasRoyalFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
         assertFalse(hand.hasRoyalFlush());
     }
+
+    @Test
+    void hasHandTest() {
+        for(int i=0; i<5; i++) {
+            Card card = deck.dealCard();
+            player.addCard(card);
+        }
+        player.setHand();
+        player.printCards();
+        System.out.println(player.getHand().toString());
+        assertTrue(true);
+    }
 }
