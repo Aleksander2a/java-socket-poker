@@ -13,6 +13,8 @@ public class Player {
     private int money;
     private ArrayList<Card> cards = new ArrayList<>();
     private int currentGameId;
+    private Hand hand;
+
 
     public Player() {}
 
@@ -95,5 +97,16 @@ public class Player {
             }
                 return 0;
         }
+    }
+
+    public void setHand() {
+        sortCards();
+        hand = new Hand(cards);
+
+        //for(int i=0; )
+    }
+
+    public Hand getHand() {
+        return hand;
     }
 }
