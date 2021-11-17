@@ -1,6 +1,8 @@
 package poker.socket.java;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -63,12 +65,35 @@ public class Player {
         }
     }
 
+    public Card getCardAtIndex(int i) {
+        return cards.get(i);
+    }
+
     /**
      * Prints out all player's cards
      */
     public void printCards() {
         for(Card card : cards) {
             System.out.println(card.toString());
+        }
+    }
+
+    public void sortCards() {
+        cards.sort(new SortByRankSuit());
+    }
+
+    static class SortByRankSuit implements Comparator<Card> {
+        @Override
+        public int compare(Card o1, Card o2) {
+            if(o1.compareRankWith(o2)!=0) {
+                return o1.compareRankWith(o2);
+            }
+            else {
+                if(o1.compareSuitWith(o2)!=0) {
+                    return o1.compareSuitWith(o2);
+                }
+            }
+                return 0;
         }
     }
 }
