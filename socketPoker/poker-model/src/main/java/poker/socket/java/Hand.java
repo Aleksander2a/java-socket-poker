@@ -238,4 +238,27 @@ public class Hand {
                 ", kicker=" + kicker +
                 '}';
     }
+
+    public int compareTo(Hand otherHand) {
+        if(ranking.ordinal() - otherHand.ranking.ordinal() > 0) {
+            return 1;
+        }
+        else if(ranking.ordinal() - otherHand.ranking.ordinal() < 0) {
+            return -1;
+        }
+        if(leadingCard.compareRankWith(otherHand.leadingCard) > 0) {
+            return 1;
+        }
+        else if(leadingCard.compareRankWith(otherHand.leadingCard) < 0) {
+            return -1;
+        }
+        if(kicker.compareRankWith(otherHand.kicker) > 0) {
+            return 1;
+        }
+        else if(kicker.compareRankWith(otherHand.kicker) < 0) {
+            return -1;
+        }
+        return 0;
+    }
+
 }

@@ -295,4 +295,30 @@ public class HandTest {
         System.out.println(player.getHand().toString());
         assertTrue(true);
     }
+
+    @Test
+    void compareToTest() {
+        System.out.println("Player ----------------------");
+        for(int i=0; i<5; i++) {
+            Card card = deck.dealCard();
+            player.addCard(card);
+        }
+        player.setHand();
+        player.printCards();
+        System.out.println(player.getHand().toString());
+
+        System.out.println("Player1 ----------------------");
+        Player player1 = new Player();
+        for(int i=0; i<5; i++) {
+            Card card = deck.dealCard();
+            player1.addCard(card);
+        }
+        player1.setHand();
+        player1.printCards();
+        System.out.println(player1.getHand().toString());
+
+        System.out.println("Compare Player to Player1 ----------------------");
+        System.out.println(player.getHand().compareTo(player1.getHand()));
+        assertTrue(true);
+    }
 }
