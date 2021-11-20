@@ -90,6 +90,9 @@ public class ClientMessageHandler {
             inputString = scanner.nextLine();
             answer = "State:WAITING_FOR_PLAYERS-PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + msg.get("GameID");
         }
+        if(msg.get("State").equals("IN_GAME")) {
+            //TODO
+        }
         return answer;
     }
 }

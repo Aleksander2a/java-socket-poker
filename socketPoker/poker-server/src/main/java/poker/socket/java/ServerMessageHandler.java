@@ -35,12 +35,13 @@ public class ServerMessageHandler {
                     }
                 }
                 if(game.getPlayersNumber() == game.getMaxPlayersNumber()) {
-                    answer += "State:IN_GAME-";
+                    answer += "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + game.getId() + "-";
                 }
                 else {
-                    answer += "State:WAITING_FOR_PLAYERS-";
+                    answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
+                            + "GameID:" + game.getId() + "-NrOfPlayers:" + String.valueOf(game.getPlayersNumber()) +
+                            "-MaxPlayers:" + String.valueOf(game.getMaxPlayersNumber());
                 }
-                answer += "PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + game.getId() + "-";
             }
             else if(msg.get("Decision").equals("new")) {
                 answer += "State:NEW_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-";
@@ -80,7 +81,9 @@ public class ServerMessageHandler {
                         + "GameID:" + msg.get("GameID") + "-NrOfPlayers:" + String.valueOf(game.getPlayersNumber()) +
                         "-MaxPlayers:" + String.valueOf(game.getMaxPlayersNumber());
             }
-
+        }
+        if(msg.get("State").equals("IN_GAME")) {
+            //TODO
         }
         return answer;
     }
