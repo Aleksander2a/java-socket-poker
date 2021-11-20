@@ -2,6 +2,8 @@ package poker.socket.java;
 
 import java.io.*;
 import java.net.*;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * The main class on the Client-side of the app.
@@ -30,13 +32,20 @@ public class Client
                     new BufferedReader(new InputStreamReader(System.in));
             String fromServer;
             String fromClient;
+            LinkedHashMap<String, String> encodedFromServer;
 
             while ((fromServer = in.readLine()) != null) {
-                System.out.println("Server: " + fromServer);
+                // uncode fromServer
+                //System.out.println(fromServer);
+                encodedFromServer = ClientMessageHandler.encode(fromServer);
+                // react
+                fromClient = ClientMessageHandler.answerToMessage(encodedFromServer);
+                //System.out.println("Server: " + fromServer);
                 if (fromServer.equals("Bye."))
                     break;
 
-                fromClient = stdIn.readLine(); //Read input from Client
+                // get response from Client - OLD KK VERSION
+                //fromClient = stdIn.readLine();
                 if (fromClient != null) {
                     System.out.println("Client: " + fromClient);
                     out.println(fromClient);

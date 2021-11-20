@@ -14,8 +14,8 @@ public class Game {
     private int startingMoney;
     private Player dealer;
     private Player playerTurn;
-    private ArrayList<Player> players;
-    private ArrayList<Player> activePlayers;
+    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Player> activePlayers = new ArrayList<>();
     private Round round;
 
     public enum Round {
@@ -36,6 +36,10 @@ public class Game {
     }
 
     public void setId(int gameId) {this.id = gameId;}
+
+    public int getId() {
+        return id;
+    }
 
     public void setAnte(int gameAnte) {this.ante = gameAnte;}
 
@@ -89,7 +93,15 @@ public class Game {
         this.round = round;
     }
 
+    public int getPlayersNumber() {
+        return players.size();
+    }
+
     public void playerFolds(Player p) {
         activePlayers.remove(p);
+    }
+
+    public void addPlayer(Player p) {
+        players.add(p);
     }
 }
