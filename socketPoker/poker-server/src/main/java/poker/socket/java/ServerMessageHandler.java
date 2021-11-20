@@ -34,7 +34,8 @@ public class ServerMessageHandler {
             }
             Server.games.add(game);
             answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID")
-                    + "-GameID:" + String.valueOf(game.getId()) + "-NrOfPlayers:" + String.valueOf(game.getPlayersNumber());
+                    + "-GameID:" + String.valueOf(game.getId()) + "-NrOfPlayers:" + String.valueOf(game.getPlayersNumber())
+                    + "-MaxPlayers:" + String.valueOf(game.getMaxPlayersNumber());
         }
         if(msg.get("State").equals("WAITING_FOR_PLAYERS")) {
             Game game=null;
@@ -44,12 +45,13 @@ public class ServerMessageHandler {
                 }
             }
             if(game.getPlayersNumber()==game.getMaxPlayersNumber()) {
-                answer = "State:IN_GAME-" + msg.get("PlayerID") + "-"
-                        + "GameID:";
+                answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-"
+                        + "GameID:" + msg.get("GameID");
             }
             else {
-                answer = "State:WAITING_FOR_PLAYERS-" + msg.get("PlayerID") + "-"
-                        + "GameID:" + String.valueOf(game.getId()) + "-NrOfPlayers:" + String.valueOf(game.getPlayersNumber());
+                answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
+                        + "GameID:" + msg.get("GameID") + "-NrOfPlayers:" + String.valueOf(game.getPlayersNumber()) +
+                        "-MaxPlayers:" + String.valueOf(game.getMaxPlayersNumber());
             }
 
         }

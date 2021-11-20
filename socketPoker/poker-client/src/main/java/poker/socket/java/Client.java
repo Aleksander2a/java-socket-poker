@@ -36,11 +36,10 @@ public class Client
 
             while ((fromServer = in.readLine()) != null) {
                 // uncode fromServer
-                //System.out.println(fromServer);
+                System.out.println("Server: " + fromServer);
                 encodedFromServer = ClientMessageHandler.encode(fromServer);
                 // react
                 fromClient = ClientMessageHandler.answerToMessage(encodedFromServer);
-                //System.out.println("Server: " + fromServer);
                 if (fromServer.equals("Bye."))
                     break;
 

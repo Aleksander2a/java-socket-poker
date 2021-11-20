@@ -48,10 +48,10 @@ public class ClientMessageHandler {
             answer += "Ante:" + inputString + "-";
         }
         if(msg.get("State").equals("WAITING_FOR_PLAYERS")) {
-            String gameId = msg.get("GameID");
-            System.out.println("Created game of ID: " + gameId + "Waiting for players, press ENTER to continue");
+            int playersNeeded = Integer.parseInt(msg.get("MaxPlayers")) - Integer.parseInt(msg.get("NrOfPlayers"));
+            System.out.println("GameID: " + msg.get("GameID") + " .Waiting for " + playersNeeded + " more player(s), press ENTER to refresh");
             inputString = scanner.nextLine();
-            answer = "State:WAITING_FOR_PLAYERS|PlayerID:" + msg.get("PlayerID") + "-" + "GameID" + msg.get("GameID");
+            answer = "State:WAITING_FOR_PLAYERS-PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + msg.get("GameID");
         }
         return answer;
     }

@@ -49,7 +49,8 @@ public class Protocol {
                 encodedFromClient = ServerMessageHandler.encode(theInput);
                 // react
                 theOutput = ServerMessageHandler.answerToMessage(encodedFromClient);
-                if(encodedFromClient.get("State").equals("IN_GAME")) {
+                LinkedHashMap<String, String> check = ServerMessageHandler.encode(theOutput);
+                if(check.get("State").equals("IN_GAME")) {
                     state = State.IN_GAME;
                 }
                 break;
