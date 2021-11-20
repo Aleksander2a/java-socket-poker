@@ -1,6 +1,9 @@
 package poker.socket.java;
 
+import java.sql.SQLOutput;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientMessageHandler {
     static LinkedHashMap<String, String> encode(String input) {
@@ -19,12 +22,46 @@ public class ClientMessageHandler {
         Scanner scanner = new Scanner(System.in);
         String answer = "";
         String inputString = "";
+        if(msg.get("State").equals("JOIN_OR_CREATE_GAME")) {
+            answer += "State:" + msg.get("State") + "-";
+            answer += "PlayerID:" + msg.get("PlayerID") + "-";
+            System.out.println("There are " + msg.get("GameNumber") + " game(s) to join:");
+            Pattern gamePattern = Pattern.compile("Game[0-9]");
+            Set<String> availableGames = new HashSet<>();
+            for (String key : msg.keySet()) {
+                Matcher gameMatcher = gamePattern.matcher(key);
+                if(gameMatcher.find()) {
+                    System.out.println(key + ": Max players: " + msg.get(key));
+                    availableGames.add(key);
+                }
+            }
+            System.out.println("Do you want to join an existing game or create new game?(join/new)");
+            inputString = scanner.nextLine();
+            while (!inputString.equals("join") && !inputString.equals("new")) {
+                System.out.println("Provide valid input: \"join\" or \"new\"");
+                inputString = scanner.nextLine();
+            }
+            if(inputString.equals("join")) {
+                answer += "Decision:join-";
+                System.out.println("Which game do you want to join?");
+                inputString = scanner.nextLine();
+                while (!availableGames.contains(inputString)) {
+                    System.out.println("Provide a valid game that is available");
+                    inputString = scanner.nextLine();
+                }
+                String chosenGame =  "" + inputString.charAt(4);
+                answer += "Joins:" + chosenGame + "-";
+            }
+            else if(inputString.equals("new")) {
+                answer += "Decision:new-";
+            }
+        }
         if(msg.get("State").equals("NEW_GAME")) {
             answer += "State:" + msg.get("State") + "-";
             answer += "PlayerID:" + msg.get("PlayerID") + "-";
             // Choose playerNumber
             System.out.println("How many players do you want to play? (2-4)");
-            inputString = scanner.nextLine();;
+            inputString = scanner.nextLine();
             while (Integer.parseInt(inputString) > 4 || Integer.parseInt(inputString) < 2) {
                 System.out.println("Give a valid number from 2 to 4");
                 inputString = scanner.nextLine();

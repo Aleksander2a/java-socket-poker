@@ -18,12 +18,13 @@ public class Protocol {
     public String processInput(String theInput) {
         String theOutput = null;
         LinkedHashMap<String, String> encodedFromClient;
+        LinkedHashMap<String, String> check;
 
         switch (state) {
             case ENTERED:
-                Player player = new Player(Server.nextPlayerId);
+                Player client = new Player(Server.nextPlayerId);
                 Server.nextPlayerId++;
-                Server.clients.add(player);
+                Server.clients.add(client);
                 if(Server.games.isEmpty()) {
                     state = State.NEW_GAME;
                 }
@@ -31,8 +32,31 @@ public class Protocol {
                     state = State.JOIN_OR_CREATE_GAME;
                 }
                 theOutput = "State:" + state + "-";
-                theOutput += "PlayerID:" + player.getId() + "-";
+                theOutput += "PlayerID:" + client.getId() + "-";
+                theOutput += "GameNumber:" + Server.games.size() + "-";
+                if(state == State.JOIN_OR_CREATE_GAME) {
+                    for(Game g : Server.games) {
+                        theOutput += "Game" + g.getId() + ":" + g.getMaxPlayersNumber() + "-";
+                    }
+                }
                 break;
+            case JOIN_OR_CREATE_GAME:
+                encodedFromClient = ServerMessageHandler.encode(theInput);
+                // react
+                theOutput = ServerMessageHandler.answerToMessage(encodedFromClient);
+                check = ServerMessageHandler.encode(theOutput);
+                if(check.get("State").equals("NEW_GAME")) {
+                    state = State.NEW_GAME;
+                }
+                else if(check.get("State").equals("IN_GAME")) {
+                    state = State.IN_GAME;
+                }
+                else if(check.get("State").equals("WAITING_FOR_PLAYERS")) {
+                    state = State.WAITING_FOR_PLAYERS;
+                }
+                break;
+            //case JOIN_GAME:
+                //break;
             case NEW_GAME:
                 // encode theInput
                 encodedFromClient = ServerMessageHandler.encode(theInput);
@@ -49,10 +73,13 @@ public class Protocol {
                 encodedFromClient = ServerMessageHandler.encode(theInput);
                 // react
                 theOutput = ServerMessageHandler.answerToMessage(encodedFromClient);
-                LinkedHashMap<String, String> check = ServerMessageHandler.encode(theOutput);
+                check = ServerMessageHandler.encode(theOutput);
                 if(check.get("State").equals("IN_GAME")) {
                     state = State.IN_GAME;
                 }
+                break;
+            case IN_GAME:
+                System.out.println("Game started");
                 break;
         }
 

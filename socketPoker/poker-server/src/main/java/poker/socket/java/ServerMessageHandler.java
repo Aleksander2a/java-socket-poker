@@ -20,6 +20,32 @@ public class ServerMessageHandler {
         String answer = "";
         //answer += "State:" + msg.get("State") + "|";
         //answer += "ID:" + msg.get("ID") + "|";
+        if(msg.get("State").equals("JOIN_OR_CREATE_GAME")) {
+            if(msg.get("Decision").equals("join")) {
+                Game game=null;
+                for (Game g : Server.games) {
+                    if(g.getId() == Integer.parseInt(msg.get("Joins"))) {
+                        game = g;
+                    }
+                }
+                for(Player p : Server.clients) {
+                    if(p.getId() == Integer.parseInt(msg.get("PlayerID"))) {
+                        game.addPlayer(p);
+                        p.setCurrentGameId(game.getId());
+                    }
+                }
+                if(game.getPlayersNumber() == game.getMaxPlayersNumber()) {
+                    answer += "State:IN_GAME-";
+                }
+                else {
+                    answer += "State:WAITING_FOR_PLAYERS-";
+                }
+                answer += "PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + game.getId() + "-";
+            }
+            else if(msg.get("Decision").equals("new")) {
+                answer += "State:NEW_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-";
+            }
+        }
         if(msg.get("State").equals("NEW_GAME")) {
             // Choose playerNumber
             Game game = new Game();
@@ -30,6 +56,7 @@ public class ServerMessageHandler {
             for(Player p : Server.clients) {
                 if(p.getId() == Integer.parseInt(msg.get("PlayerID"))) {
                     game.addPlayer(p);
+                    p.setCurrentGameId(game.getId());
                 }
             }
             Server.games.add(game);
