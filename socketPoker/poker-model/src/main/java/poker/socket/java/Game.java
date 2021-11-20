@@ -8,16 +8,26 @@ import java.util.ArrayList;
 public class Game {
     private int id;
     private int ante;
-    private int playersNumber;
+    private int pot;
+    private int maxBid;
+    private int maxPlayersNumber;
     private int startingMoney;
+    private Player dealer;
+    private Player playerTurn;
     private ArrayList<Player> players;
+    private ArrayList<Player> activePlayers;
+    private Round round;
+
+    public enum Round {
+        FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS
+    }
 
     public Game() {}
 
     public Game(int gameId, int gameAnte, int maxPlayers, int startingMoney, ArrayList<Player> gamePlayers) {
         this.id = gameId;
         this.ante = gameAnte;
-        this.playersNumber = maxPlayers;
+        this.maxPlayersNumber = maxPlayers;
         this.players = gamePlayers;
         for(Player player : players) {
             player.setMoney(startingMoney);
@@ -29,9 +39,57 @@ public class Game {
 
     public void setAnte(int gameAnte) {this.ante = gameAnte;}
 
-    public void setPlayersNumber(int maxPlayers) {this.playersNumber = maxPlayers;}
+    public int getAnte() {
+        return ante;
+    }
+
+    public void setPot(int gamePot) {this.pot = gamePot;}
+
+    public int getPot() {
+        return pot;
+    }
+
+    public int getMaxBid() {
+        return maxBid;
+    }
+
+    public void setMaxBid(int maxBid) {
+        this.maxBid = maxBid;
+    }
+
+    public void setMaxPlayersNumber(int maxPlayers) {this.maxPlayersNumber = maxPlayers;}
+
+    public int getMaxPlayersNumber() {return this.maxPlayersNumber;}
 
     public void setStartingMoney(int money) {this.startingMoney = money;}
 
     public int getStartingMoney() {return startingMoney;}
+
+    public Player getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Player dealer) {
+        this.dealer = dealer;
+    }
+
+    public Player getPlayerTurn() {
+        return playerTurn;
+    }
+
+    public void setPlayerTurn(Player playerTurn) {
+        this.playerTurn = playerTurn;
+    }
+
+    public Round getRound() {
+        return round;
+    }
+
+    public void setRound(Round round) {
+        this.round = round;
+    }
+
+    public void playerFolds(Player p) {
+        activePlayers.remove(p);
+    }
 }

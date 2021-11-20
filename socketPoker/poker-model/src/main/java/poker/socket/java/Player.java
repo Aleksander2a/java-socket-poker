@@ -11,6 +11,8 @@ import java.util.Random;
 public class Player {
     private int id;
     private int money;
+    private int inPot;
+    private int Bid;
     private ArrayList<Card> cards = new ArrayList<>();
     private int currentGameId;
     private Hand hand;
@@ -45,6 +47,30 @@ public class Player {
 
     public void updateMoney(int value) {
         this.money += value;
+    }
+
+    public int getInPot() {
+        return inPot;
+    }
+
+    public void setInPot(int inPot) {
+        this.inPot = inPot;
+    }
+
+    public void updateInPot(int value) {
+        this.inPot += value;
+    }
+
+    public int getBid() {
+        return Bid;
+    }
+
+    public void setBid(int inBid) {
+        this.Bid = inBid;
+    }
+
+    public void updateBid(int value) {
+        this.Bid += value;
     }
 
     /**

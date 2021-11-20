@@ -16,7 +16,7 @@ public class Server {
         System.out.println( "Server " + hostName + " welcomes You!" );
 
         if (args.length != 1) {
-            System.err.println("Usage: java KKMultiServer <port number>");
+            System.err.println("Usage: java -jar poker-server-1.0-jar-with-dependencies <port number>");
             System.exit(1);
         }
 
