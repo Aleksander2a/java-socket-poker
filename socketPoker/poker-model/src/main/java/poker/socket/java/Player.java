@@ -13,10 +13,15 @@ public class Player {
     private int money;
     private int inPot;
     private int Bid;
+    private boolean active;
+    private Action action;
     private ArrayList<Card> cards = new ArrayList<>();
     private int currentGameId;
     private Hand hand;
 
+    public enum Action {
+        CHECK, FOLD, BID
+    }
 
     public Player() {}
 
@@ -133,5 +138,31 @@ public class Player {
 
     public Hand getHand() {
         return hand;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
+    }
+
+    public String handToString() {
+        String result = "";
+        for(int i=0; i<5; i++) {
+            result += "Card" + i + ":" + cards.get(i).getRank() + "," +
+                    cards.get(i).getSuit() + "-";
+        }
+
+        return result;
     }
 }

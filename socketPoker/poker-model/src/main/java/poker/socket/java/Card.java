@@ -37,6 +37,13 @@ public class Card
         suit = s;
     }
 
+    public Card(String x) {
+        String[] values = x.split(",");
+        rank = Rank.valueOf(values[0]);
+        suit = Suit.valueOf(values[1]);
+
+    }
+
     public Rank getRank() {
         return rank;
     }

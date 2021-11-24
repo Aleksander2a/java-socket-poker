@@ -12,6 +12,7 @@ public class Game {
     private int maxBid;
     private int maxPlayersNumber;
     private int startingMoney;
+    public Deck deck = new Deck();
     private Player dealer;
     private Player playerTurn;
     private ArrayList<Player> players = new ArrayList<>();
@@ -103,5 +104,72 @@ public class Game {
 
     public void addPlayer(Player p) {
         players.add(p);
+    }
+
+    public void takeAnteFromPlayer() {
+        pot = 0;
+        round = Round.FIRST_BETTING;
+        for(Player p : players) {
+            if(p.getMoney() != 0 ) {
+                for(int i=0; i<5; i++) {
+                    p.addCard(deck.dealCard());
+                }
+                int pMoney = p.getMoney();
+                p.setMoney(Math.max(pMoney - ante, 0));
+                p.setInPot(pMoney - p.getMoney());
+                pot += p.getInPot();
+                p.setBid(0);
+
+            }
+            else {
+                p.setActive(false);
+            }
+        }
+    }
+
+    public String gameInfo() {
+        String info = "";
+        info += "Round=" + round + "|Pot=" + pot + ",";
+        for(Player p : players) {
+            info += "|Player" + p.getId() + "|Money=" + p.getMoney() + "|InGame=" + p.isActive();
+            if(p.isActive()) {
+                info += "|Action=" + p.getAction() + "|InPot=" + p.getInPot() + "|Bid=" + p.getBid();
+            }
+            if(dealer.getId()==p.getId()) {
+                info += "|Dealer";
+            }
+            if(playerTurn.getId()==p.getId()) {
+                info += "|Turn";
+            }
+            info += ",";
+        }
+
+        return info;
+    }
+
+    public Player getPlayerAtIndex(int i) {
+        return players.get(i);
+    }
+
+    public ArrayList<Player> gamePlayers() {
+        return  players;
+    }
+
+    public void giveMoneyToPlayers() {
+        for(Player p : players) {
+            p.setMoney(startingMoney);
+        }
+    }
+
+    public void initializeGame() {
+        setDealer(players.get(0));
+        setPlayerTurn(players.get(1));
+        giveMoneyToPlayers();
+        takeAnteFromPlayer();
+        for(Player p : players) {
+            p.setActive(true);
+            p.setAction(Player.Action.CHECK);
+            p.setHand();
+        }
     }
 }

@@ -18,6 +18,13 @@ public class ClientMessageHandler {
         return result;
     }
 
+    static void gameInfoEncoder(String gameInfo) {
+        String[] elements = gameInfo.split(",");
+        for(String s : elements) {
+            System.out.println(s);
+        }
+    }
+
     static String answerToMessage(LinkedHashMap<String, String> msg) {
         Scanner scanner = new Scanner(System.in);
         String answer = "";
@@ -91,7 +98,22 @@ public class ClientMessageHandler {
             answer = "State:WAITING_FOR_PLAYERS-PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + msg.get("GameID");
         }
         if(msg.get("State").equals("IN_GAME")) {
-            //TODO
+            //TODO: receives info about game and reacts accordingly
+            //System.out.println(msg.get("GameInfo"));
+            //Game.Round gameRound =
+            gameInfoEncoder(msg.get("GameInfo"));
+            System.out.println("Your cards:");
+            Pattern cardPattern = Pattern.compile("Card[0-4]");
+            ArrayList<Card> playerCards = new ArrayList<>();
+            String handToPrint = "|";
+            for (String key : msg.keySet()) {
+                Matcher cardMatcher = cardPattern.matcher(key);
+                if(cardMatcher.find()) {
+                    handToPrint += msg.get(key) + "|";
+                    playerCards.add(new Card(msg.get(key)));
+                }
+            }
+            System.out.println(handToPrint);
         }
         return answer;
     }

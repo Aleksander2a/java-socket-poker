@@ -18,6 +18,7 @@ public class ServerMessageHandler {
     static String answerToMessage(LinkedHashMap<String, String> msg) {
         Scanner scanner = new Scanner(System.in);
         String answer = "";
+        String playerHand = "";
         //answer += "State:" + msg.get("State") + "|";
         //answer += "ID:" + msg.get("ID") + "|";
         if(msg.get("State").equals("JOIN_OR_CREATE_GAME")) {
@@ -35,7 +36,15 @@ public class ServerMessageHandler {
                     }
                 }
                 if(game.getPlayersNumber() == game.getMaxPlayersNumber()) {
-                    answer += "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + game.getId() + "-";
+                    //TODO: add info about game when IN_GAME
+                    game.initializeGame();
+                    for(Player p : game.gamePlayers()) {
+                        if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
+                            playerHand = p.handToString();
+                        }
+                    }
+                    answer += "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + game.getId()
+                            + "-GameInfo:" + game.gameInfo() + "-" + playerHand;
                 }
                 else {
                     answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
@@ -73,8 +82,16 @@ public class ServerMessageHandler {
                 }
             }
             if(game.getPlayersNumber()==game.getMaxPlayersNumber()) {
+                //TODO: add info about game when IN_GAME
+                game.initializeGame();
+                for(Player p : game.gamePlayers()) {
+                    if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
+                        playerHand = p.handToString();
+                    }
+                }
                 answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-"
-                        + "GameID:" + msg.get("GameID");
+                        + "GameID:" + msg.get("GameID") + "-GameInfo:" + game.gameInfo()
+                        + "-" + playerHand;
             }
             else {
                 answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
