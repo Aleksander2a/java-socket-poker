@@ -177,9 +177,16 @@ public class ClientMessageHandler {
                         System.out.println("What card do you want to change? (Rank Suit)");
                         inputString = scanner.nextLine();
                         //TODO: Handle invalid input
+                        Pattern validCardPattern = Pattern.compile("[A-Za-z] [A-Za-z]");
+                        Matcher validMatcher = validCardPattern.matcher(inputString);
+                        while(!validMatcher.find()) {
+                            System.out.println("Invalid input. Try again. (Rank Suit)");
+                            inputString = scanner.nextLine();
+                            validMatcher = validCardPattern.matcher(inputString);
+                        }
                         String[] cardInput = inputString.split(" ");
                         for(Card c : playerCards) {
-                            if(c.getRank().equals(Card.Rank.valueOf(cardInput[0])) && c.getSuit().equals(Card.Suit.valueOf(cardInput[1]))) {
+                            if(cardInput[0].equals(String.valueOf(c.getRank())) && cardInput[1].equals(String.valueOf(c.getSuit()))) {
                                 validCard = true;
                                 break;
                             }
@@ -188,6 +195,12 @@ public class ClientMessageHandler {
                             System.out.println("No such card. Provide a card that you have");
                             inputString = scanner.nextLine();
                             //TODO: Handle invalid input
+                            validMatcher = validCardPattern.matcher(inputString);
+                            while(!validMatcher.find()) {
+                                System.out.println("Invalid input. Try again. (Rank Suit)");
+                                inputString = scanner.nextLine();
+                                validMatcher = validCardPattern.matcher(inputString);
+                            }
                             cardInput = inputString.split(" ");
                             for(Card c : playerCards) {
                                 if(c.getRank().equals(Card.Rank.valueOf(cardInput[0])) && c.getSuit().equals(Card.Suit.valueOf(cardInput[1]))) {
