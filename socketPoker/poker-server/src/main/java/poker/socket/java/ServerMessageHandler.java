@@ -48,6 +48,7 @@ public class ServerMessageHandler {
                     playerTurnId = game.getPlayerTurn().getId();
                     maxBid = game.getMaxBid();
                     for(Player p : game.gamePlayers()) {
+                        game.addActivePlayer(p);
                         if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
                             playerHand = p.handToString();
                             money = p.getMoney();
@@ -101,6 +102,7 @@ public class ServerMessageHandler {
                 playerTurnId = game.getPlayerTurn().getId();
                 maxBid = game.getMaxBid();
                 for(Player p : game.gamePlayers()) {
+                    game.addActivePlayer(p);
                     if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
                         playerHand = p.handToString();
                         money = p.getMoney();
@@ -151,6 +153,7 @@ public class ServerMessageHandler {
                                 player.setAction(Player.Action.FOLD);
                                 game.playerFolds(player);
                                 // TODO: Proceed game status
+                                //game.proceedBettingRound();
                                 break;
                             case "Bid":
                                 int playerBid = Integer.parseInt(msg.get("Bid"));
@@ -159,10 +162,14 @@ public class ServerMessageHandler {
                                 player.updateInPot(playerBid);
                                 player.setAction(Player.Action.BID);
                                 game.setMaxBid(Math.max(playerBid, game.getMaxBid()));
+                                game.updatePot();
                                 //TODO: Proceed game status
+                                //game.proceedBettingRound();
                                 break;
                         }
-                        game.nextTurn();
+                        //game.nextTurn();
+                        // TODO: Proceed game status
+                        game.proceedBettingRound();
                         gameRound = String.valueOf(game.getRound());
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                 + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"

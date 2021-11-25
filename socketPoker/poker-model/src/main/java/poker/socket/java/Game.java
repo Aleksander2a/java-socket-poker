@@ -22,7 +22,7 @@ public class Game {
     private Round round;
 
     public enum Round {
-        FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS
+        FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
     }
 
     public Game() {}
@@ -161,6 +161,19 @@ public class Game {
         return  activePlayers;
     }
 
+    public void addActivePlayer(Player p) {
+        if (!activePlayers.contains(p)) {
+            activePlayers.add(p);
+        }
+    }
+
+    public void updatePot() {
+        pot = 0;
+        for(Player p : players) {
+            pot += p.getInPot();
+        }
+    }
+
     public void giveMoneyToPlayers() {
         for(Player p : players) {
             p.setMoney(startingMoney);
@@ -194,34 +207,31 @@ public class Game {
         }
     }
 
-    public void nextTurn() {
-        Iterator<Player> itr = players.iterator();
-        for(Player p : players) {
-            if(p.isActive() || !p.getAction().equals(Player.Action.FOLD)) {
-                activePlayers.add(p);
-            }
-        }
-        if(activePlayers.size()==1) {
-            round = Round.COMPARING_CARDS;
-            return;
-        }
-        int index=0;
-        for(int i=0; i<activePlayers.size(); i++) {
-            if(activePlayers.get(i).getId()==playerTurn.getId()) {
-                index = (i+1)%activePlayers.size();
-            }
-        }
-        playerTurn = activePlayers.get(index);
-        if(!playerTurn.getAction().equals(Player.Action.NONE)) {
+    public void proceedBettingRound() {
+        if(activePlayers.size()>1) {
             boolean areEqual = true;
             for(Player p : activePlayers) {
-                if(!(p.getBid()==maxBid)) {
+                if(p.getBid() != maxBid) {
                     areEqual = false;
+                    break;
                 }
             }
             if(areEqual) {
                 nextPhase();
             }
+            else {
+                int index=0;
+                for(int i=0; i<activePlayers.size(); i++) {
+                    if(activePlayers.get(i).getId()==playerTurn.getId()) {
+                        index = (i+1)%activePlayers.size();
+                    }
+                }
+                playerTurn = activePlayers.get(index);
+            }
+        }
+        else {
+            round = Round.SET_OVER;
+            activePlayers.get(0).updateMoney(pot);
         }
     }
 }
