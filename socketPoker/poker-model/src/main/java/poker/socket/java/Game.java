@@ -20,6 +20,7 @@ public class Game {
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Player> activePlayers = new ArrayList<>();
     private Round round;
+    private boolean initialized = false;
 
     public enum Round {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
@@ -181,16 +182,19 @@ public class Game {
     }
 
     public void initializeGame() {
-        setDealer(players.get(0));
-        setPlayerTurn(players.get(1));
-        giveMoneyToPlayers();
-        takeAnteFromPlayer();
-        for(Player p : players) {
-            p.setActive(true);
-            p.setAction(Player.Action.NONE);
-            p.setHand();
+        if(!initialized) {
+            setDealer(players.get(0));
+            setPlayerTurn(players.get(1));
+            giveMoneyToPlayers();
+            takeAnteFromPlayer();
+            for (Player p : players) {
+                p.setActive(true);
+                p.setAction(Player.Action.NONE);
+                p.setHand();
+            }
+            maxBid = 0;
+            initialized = true;
         }
-        maxBid = 0;
     }
 
     public void nextPhase() {

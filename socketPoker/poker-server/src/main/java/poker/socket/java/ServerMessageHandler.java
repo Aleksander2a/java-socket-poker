@@ -141,6 +141,7 @@ public class ServerMessageHandler {
                         + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
                         + "-" + player.handToString();
+                return answer;
             }
             else {
                 switch (gameRound) {
