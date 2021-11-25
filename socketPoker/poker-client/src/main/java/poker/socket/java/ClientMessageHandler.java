@@ -163,6 +163,42 @@ public class ClientMessageHandler {
                     }
                     break;
                 case CHANGE_CARDS:
+                    answer = "State:CHANGE_CARDS-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID");
+                    System.out.println("How many cards do you want to change? (0-5)");
+                    inputString = scanner.nextLine();
+                    while(Integer.parseInt(inputString) > 5 || Integer.parseInt(inputString) < 0) {
+                        System.out.println("Invalid amount. Provide number between (0-5) ");
+                        inputString = scanner.nextLine();
+                    }
+                    answer += "-NrOfCardsToChange:" + inputString;
+                    int nrOfCardsToChange = Integer.parseInt(inputString);
+                    for(int i=nrOfCardsToChange; i>0; i--) {
+                        boolean validCard = false;
+                        System.out.println("What card do you want to change? (Rank Suit)");
+                        inputString = scanner.nextLine();
+                        //TODO: Handle invalid input
+                        String[] cardInput = inputString.split(" ");
+                        for(Card c : playerCards) {
+                            if(c.getRank().equals(Card.Rank.valueOf(cardInput[0])) && c.getSuit().equals(Card.Suit.valueOf(cardInput[1]))) {
+                                validCard = true;
+                                break;
+                            }
+                        }
+                        while(!validCard) {
+                            System.out.println("No such card. Provide a card that you have");
+                            inputString = scanner.nextLine();
+                            //TODO: Handle invalid input
+                            cardInput = inputString.split(" ");
+                            for(Card c : playerCards) {
+                                if(c.getRank().equals(Card.Rank.valueOf(cardInput[0])) && c.getSuit().equals(Card.Suit.valueOf(cardInput[1]))) {
+                                    validCard = true;
+                                    break;
+                                }
+                            }
+                        }
+                        //Add info on cards to change to answer
+                        answer += "-ToChange" + i + ":" + inputString;
+                    }
                     break;
                 case SECOND_BETTING:
                     break;

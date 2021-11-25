@@ -222,6 +222,7 @@ public class Game {
             }
             if(areEqual) {
                 nextPhase();
+                resetTurnOnNewPhase();
             }
             else {
                 int index=0;
@@ -236,6 +237,26 @@ public class Game {
         else {
             round = Round.SET_OVER;
             activePlayers.get(0).updateMoney(pot);
+        }
+    }
+
+    public void resetTurnOnNewPhase() {
+        Player cardDealer;
+        int index = 0;
+        boolean newTurnFound = false;
+        for(int i=0; i<players.size(); i++) {
+            if(players.get(i).getId()==dealer.getId()) {
+                cardDealer = players.get(i);
+                index = i;
+            }
+        }
+        index++;
+        while(!newTurnFound) {
+            if(!players.get(index%players.size()).getAction().equals(Player.Action.FOLD)) {
+                playerTurn = players.get(index%players.size());
+                newTurnFound = true;
+            }
+            index++;
         }
     }
 }
