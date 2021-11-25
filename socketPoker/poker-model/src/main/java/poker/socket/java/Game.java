@@ -1,6 +1,8 @@
 package poker.socket.java;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /**
  * A class to represent a single game on the server
@@ -155,6 +157,10 @@ public class Game {
         return  players;
     }
 
+    public ArrayList<Player> activePlayers() {
+        return  activePlayers;
+    }
+
     public void giveMoneyToPlayers() {
         for(Player p : players) {
             p.setMoney(startingMoney);
@@ -168,8 +174,54 @@ public class Game {
         takeAnteFromPlayer();
         for(Player p : players) {
             p.setActive(true);
-            p.setAction(Player.Action.CHECK);
+            p.setAction(Player.Action.NONE);
             p.setHand();
+        }
+        maxBid = 0;
+    }
+
+    public void nextPhase() {
+        switch (round){
+            case FIRST_BETTING:
+                round = Round.CHANGE_CARDS;
+                break;
+            case CHANGE_CARDS:
+                round = Round.SECOND_BETTING;
+                break;
+            case SECOND_BETTING:
+                round = Round.COMPARING_CARDS;
+                break;
+        }
+    }
+
+    public void nextTurn() {
+        Iterator<Player> itr = players.iterator();
+        for(Player p : players) {
+            if(p.isActive() || !p.getAction().equals(Player.Action.FOLD)) {
+                activePlayers.add(p);
+            }
+        }
+        if(activePlayers.size()==1) {
+            round = Round.COMPARING_CARDS;
+            return;
+        }
+        int index=0;
+        for(int i=0; i<activePlayers.size(); i++) {
+            if(activePlayers.get(i).getId()==playerTurn.getId()) {
+                index = (i+1)%activePlayers.size();
+            }
+        }
+        playerTurn = activePlayers.get(index);
+        if(!playerTurn.getAction().equals(Player.Action.NONE)) {
+            boolean areEqual = true;
+            for(Player p : activePlayers) {
+                if(!(p.getBid()==maxBid)) {
+                    areEqual = false;
+                }
+            }
+            if(areEqual) {
+                nextPhase();
+            }
         }
     }
 }

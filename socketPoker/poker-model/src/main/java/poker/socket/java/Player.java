@@ -20,7 +20,7 @@ public class Player {
     private Hand hand;
 
     public enum Action {
-        CHECK, FOLD, BID
+        NONE, CHECK, FOLD, BID
     }
 
     public Player() {}

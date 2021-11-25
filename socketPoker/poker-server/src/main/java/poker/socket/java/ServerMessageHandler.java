@@ -19,6 +19,12 @@ public class ServerMessageHandler {
         Scanner scanner = new Scanner(System.in);
         String answer = "";
         String playerHand = "";
+        String gameRound= "";
+        int playerTurnId = -1;
+        int money = 0;
+        int maxBid = 0;
+        int myBid = 0;
+        Player.Action action = Player.Action.NONE;
         //answer += "State:" + msg.get("State") + "|";
         //answer += "ID:" + msg.get("ID") + "|";
         if(msg.get("State").equals("JOIN_OR_CREATE_GAME")) {
@@ -38,13 +44,20 @@ public class ServerMessageHandler {
                 if(game.getPlayersNumber() == game.getMaxPlayersNumber()) {
                     //TODO: add info about game when IN_GAME
                     game.initializeGame();
+                    gameRound = String.valueOf(game.getRound());
+                    playerTurnId = game.getPlayerTurn().getId();
+                    maxBid = game.getMaxBid();
                     for(Player p : game.gamePlayers()) {
                         if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
                             playerHand = p.handToString();
+                            money = p.getMoney();
+                            myBid = p.getBid();
+                            action = p.getAction();
                         }
                     }
-                    answer += "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + game.getId()
-                            + "-GameInfo:" + game.gameInfo() + "-" + playerHand;
+                    answer += "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-GameID:" + game.getId()
+                            + "-GameRound:" + gameRound + "-Turn:" + playerTurnId + "-MyMoney:" + money + "-MaxBid:"
+                            + maxBid + "-MyBid:" + myBid + "-MyAction:" + action + "-GameInfo:" + game.gameInfo() + "-" + playerHand;
                 }
                 else {
                     answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
@@ -84,13 +97,20 @@ public class ServerMessageHandler {
             if(game.getPlayersNumber()==game.getMaxPlayersNumber()) {
                 //TODO: add info about game when IN_GAME
                 game.initializeGame();
+                gameRound = String.valueOf(game.getRound());
+                playerTurnId = game.getPlayerTurn().getId();
+                maxBid = game.getMaxBid();
                 for(Player p : game.gamePlayers()) {
                     if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
                         playerHand = p.handToString();
+                        money = p.getMoney();
+                        myBid = p.getBid();
+                        action = p.getAction();
                     }
                 }
-                answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-"
-                        + "GameID:" + msg.get("GameID") + "-GameInfo:" + game.gameInfo()
+                answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
+                        + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + playerTurnId + "-MyMoney:" + money + "-MaxBid:"
+                        + maxBid + "-MyBid:" + myBid + "-MyAction:" + action + "-GameInfo:" + game.gameInfo()
                         + "-" + playerHand;
             }
             else {
@@ -101,6 +121,56 @@ public class ServerMessageHandler {
         }
         if(msg.get("State").equals("IN_GAME")) {
             //TODO
+            Game game=null;
+            Player player = null;
+            for (Game g : Server.games) {
+                if (g.getId() == Integer.parseInt(msg.get("GameID"))) {
+                    game = g;
+                }
+            }
+            for (Player p : game.gamePlayers()) {
+                if (p.getId() == Integer.parseInt(msg.get("PlayerID"))) {
+                    player = p;
+                }
+            }
+            gameRound = String.valueOf(game.getRound());
+            if(msg.get("Decision").equals("Refresh")) {
+                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                        + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                        + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
+                        + "-" + player.handToString();
+            }
+            else {
+                switch (gameRound) {
+                    case "FIRST_BETTING":
+                        String playerDecision = msg.get("Decision");
+                        switch (playerDecision){
+                            case "Check":
+                                break;
+                            case "Fold":
+                                player.setAction(Player.Action.FOLD);
+                                break;
+                            case "Bid":
+                                int playerBid = Integer.parseInt(msg.get("Bid"));
+                                player.setBid(playerBid);
+                                player.updateMoney(-playerBid);
+                                player.setInPot(playerBid);
+                                player.setAction(Player.Action.BID);
+                                for(Player p : game.activePlayers()) {
+                                    game.setMaxBid(Math.max(p.getBid(), game.getMaxBid()));
+                                }
+                                break;
+                        }
+                        game.nextTurn();
+                        break;
+                    case "CHANGE_CARDS":
+                        break;
+                    case "SECOND_BETTING":
+                        break;
+                    case "COMPARING_CARDS":
+                        break;
+                }
+            }
         }
         return answer;
     }

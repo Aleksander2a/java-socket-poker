@@ -99,8 +99,7 @@ public class ClientMessageHandler {
         }
         if(msg.get("State").equals("IN_GAME")) {
             //TODO: receives info about game and reacts accordingly
-            //System.out.println(msg.get("GameInfo"));
-            //Game.Round gameRound =
+            Game.Round gameRound = Game.Round.valueOf(msg.get("GameRound"));
             gameInfoEncoder(msg.get("GameInfo"));
             System.out.println("Your cards:");
             Pattern cardPattern = Pattern.compile("Card[0-4]");
@@ -114,6 +113,56 @@ public class ClientMessageHandler {
                 }
             }
             System.out.println(handToPrint);
+            if(!msg.get("Turn").equals(msg.get("PlayerID"))) {
+                System.out.println("NOT your turn! Press ENTER to refresh");
+                inputString = scanner.nextLine();
+                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+                        + "-Decision:Refresh";
+                return answer;
+            }
+            switch (gameRound) {
+                case FIRST_BETTING:
+                        System.out.println("Your turn!");
+                        if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyBid"))) {
+
+                        }
+                        if(msg.get("MyAction").equals("NONE")) {
+                            System.out.println("What do you want do: Check OR Fold OR Bid ?");
+                            inputString = scanner.nextLine();
+                            while(!inputString.equals("Check") && !inputString.equals("Fold") && !inputString.equals("Bid")) {
+                                System.out.println("What do you want do: Check OR Fold OR Bid ?");
+                                inputString = scanner.nextLine();
+                            }
+                            switch (inputString) {
+                                case "Check":
+                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+                                            + "-Decision:Check";
+                                    break;
+                                case "Fold":
+                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+                                            + "-Decision:Fold";
+                                    break;
+                                case "Bid":
+                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+                                            + "-Decision:Bid";
+                                    System.out.println("How much do you want to bid? 0-" + msg.get("MyMoney"));
+                                    inputString = scanner.nextLine();
+                                    while(Integer.parseInt(inputString) > Integer.parseInt(msg.get("MyMoney"))) {
+                                        System.out.println("Invalid amount. 0-" + msg.get("MyMoney"));
+                                        inputString = scanner.nextLine();
+                                    }
+                                    answer += "-Bid:" + inputString;
+                                    break;
+                            }
+                        }
+                    break;
+                case CHANGE_CARDS:
+                    break;
+                case SECOND_BETTING:
+                    break;
+                case COMPARING_CARDS:
+                    break;
+            }
         }
         return answer;
     }
