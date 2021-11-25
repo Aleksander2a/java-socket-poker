@@ -158,9 +158,10 @@ public class ServerMessageHandler {
                                 break;
                             case "Bid":
                                 int playerBid = Integer.parseInt(msg.get("Bid"));
+                                int diff = player.getBid() - playerBid;
                                 player.setBid(playerBid);
-                                player.updateMoney(-playerBid);
-                                player.updateInPot(playerBid);
+                                player.updateInPot(-diff);
+                                player.updateMoney(diff);
                                 player.setAction(Player.Action.BID);
                                 game.setMaxBid(Math.max(playerBid, game.getMaxBid()));
                                 game.updatePot();

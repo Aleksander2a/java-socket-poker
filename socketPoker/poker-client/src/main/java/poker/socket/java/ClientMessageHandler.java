@@ -127,12 +127,12 @@ public class ClientMessageHandler {
                     //if(msg.get("MyAction").equals("NONE")) {
                     //TODO: Game verifies if the player needs to make a move
                     int minBid = 0;
-                    int maxBidDiffMyBid = Integer.parseInt(msg.get("MaxBid")) - Integer.parseInt(msg.get("MyBid"));
-                    if(Integer.parseInt(msg.get("MyMoney")) < maxBidDiffMyBid) {
-                        minBid = Integer.parseInt(msg.get("MyMoney"));
+                    //int maxBidDiffMyBid = Integer.parseInt(msg.get("MaxBid")) - Integer.parseInt(msg.get("MyBid"));
+                    if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) {
+                        minBid = Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"));
                     }
                     else {
-                        minBid = maxBidDiffMyBid;
+                        minBid = Integer.parseInt(msg.get("MaxBid"));
                     }
                     System.out.println("What do you want do: Fold OR Bid ?");
                     inputString = scanner.nextLine();
@@ -152,10 +152,10 @@ public class ClientMessageHandler {
                         case "Bid":
                             answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
                                     + "-Decision:Bid";
-                            System.out.println("How much do you want to bid? " + minBid + "-" + msg.get("MyMoney"));
+                            System.out.println("How much do you want to bid? " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
                             inputString = scanner.nextLine();
-                            while(Integer.parseInt(inputString) > Integer.parseInt(msg.get("MyMoney")) || Integer.parseInt(inputString) < minBid) {
-                                System.out.println("Invalid amount. Provide number between: " + minBid + "-" + msg.get("MyMoney"));
+                            while(inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) || Integer.parseInt(inputString) < minBid)) {
+                                System.out.println("Invalid amount. Provide number between: " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
                                 inputString = scanner.nextLine();
                             }
                             answer += "-Bid:" + inputString;
