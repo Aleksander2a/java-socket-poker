@@ -145,23 +145,29 @@ public class ServerMessageHandler {
                     case "FIRST_BETTING":
                         String playerDecision = msg.get("Decision");
                         switch (playerDecision){
-                            case "Check":
-                                break;
+//                            case "Check":
+//                                break;
                             case "Fold":
                                 player.setAction(Player.Action.FOLD);
+                                game.playerFolds(player);
+                                // TODO: Proceed game status
                                 break;
                             case "Bid":
                                 int playerBid = Integer.parseInt(msg.get("Bid"));
                                 player.setBid(playerBid);
                                 player.updateMoney(-playerBid);
-                                player.setInPot(playerBid);
+                                player.updateInPot(playerBid);
                                 player.setAction(Player.Action.BID);
-                                for(Player p : game.activePlayers()) {
-                                    game.setMaxBid(Math.max(p.getBid(), game.getMaxBid()));
-                                }
+                                game.setMaxBid(Math.max(playerBid, game.getMaxBid()));
+                                //TODO: Proceed game status
                                 break;
                         }
                         game.nextTurn();
+                        gameRound = String.valueOf(game.getRound());
+                        answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                                + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
+                                + "-" + player.handToString();
                         break;
                     case "CHANGE_CARDS":
                         break;
