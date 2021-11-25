@@ -163,16 +163,16 @@ public class ClientMessageHandler {
                     }
                     break;
                 case CHANGE_CARDS:
-                    answer = "State:CHANGE_CARDS-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID");
+                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID");
                     System.out.println("How many cards do you want to change? (0-5)");
                     inputString = scanner.nextLine();
                     while(Integer.parseInt(inputString) > 5 || Integer.parseInt(inputString) < 0) {
                         System.out.println("Invalid amount. Provide number between (0-5) ");
                         inputString = scanner.nextLine();
                     }
-                    answer += "-NrOfCardsToChange:" + inputString;
+                    answer += "-Decision:" + inputString;
                     int nrOfCardsToChange = Integer.parseInt(inputString);
-                    for(int i=nrOfCardsToChange; i>0; i--) {
+                    for(int i=0; i<nrOfCardsToChange; i++) {
                         boolean validCard = false;
                         System.out.println("What card do you want to change? (Rank Suit)");
                         inputString = scanner.nextLine();
@@ -210,7 +210,7 @@ public class ClientMessageHandler {
                             }
                         }
                         //Add info on cards to change to answer
-                        answer += "-ToChange" + i + ":" + inputString;
+                        answer += "-ToChange" + i + ":" + cardInput[0] + "," + cardInput[1];
                     }
                     break;
                 case SECOND_BETTING:

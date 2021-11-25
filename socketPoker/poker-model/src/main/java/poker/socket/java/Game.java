@@ -240,6 +240,10 @@ public class Game {
         }
     }
 
+    public void proceedChangeRound() {
+
+    }
+
     public void resetTurnOnNewPhase() {
         Player cardDealer;
         int index = 0;

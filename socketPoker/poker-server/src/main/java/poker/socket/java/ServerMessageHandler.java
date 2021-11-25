@@ -179,6 +179,39 @@ public class ServerMessageHandler {
                                 + "-" + player.handToString();
                         break;
                     case "CHANGE_CARDS":
+                        int nrOfCardsToChange = Integer.parseInt(msg.get("Decision"));
+                        player.setCardsChangeCompleted(true);
+                        for(int i=0; i<nrOfCardsToChange; i++) {
+                            Card newCard = game.deck.dealCard();
+                            Card oldCard = player.removeCard(msg.get("ToChange"+ i));
+                            game.deck.addCard(oldCard);
+                            player.addCard(newCard);
+                        }
+                        player.setHand();
+                        boolean roundCompleted = true;
+                        for(Player p : game.gamePlayers()) {
+                            if(!p.isCardsChangeCompleted()) {
+                                roundCompleted = false;
+                            }
+                        }
+                        if(!roundCompleted) {
+                            int index=0;
+                            for(int i=0; i<game.activePlayers().size(); i++) {
+                                if(game.activePlayers().get(i).getId()==game.getPlayerTurn().getId()) {
+                                    index = (i+1)%game.activePlayers().size();
+                                }
+                            }
+                            game.setPlayerTurn(game.activePlayers().get(index));
+                        }
+                        else {
+                            game.setRound(Game.Round.SECOND_BETTING);
+                            game.resetTurnOnNewPhase();
+                        }
+                        gameRound = String.valueOf(game.getRound());
+                        answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                                + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
+                                + "-" + player.handToString();
                         break;
                     case "SECOND_BETTING":
                         break;

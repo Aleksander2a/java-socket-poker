@@ -46,7 +46,7 @@ public class Client
                 // get response from Client - OLD KK VERSION
                 //fromClient = stdIn.readLine();
                 if (fromClient != null) {
-                    //System.out.println("Client: " + fromClient);
+                    System.out.println("Client: " + fromClient);
                     out.println(fromClient);
                 }
             }

@@ -18,6 +18,7 @@ public class Player {
     private ArrayList<Card> cards = new ArrayList<>();
     private int currentGameId;
     private Hand hand;
+    private boolean cardsChangeCompleted = false;
 
     public enum Action {
         NONE, CHECK, FOLD, BID
@@ -76,6 +77,14 @@ public class Player {
 
     public void updateBid(int value) {
         this.Bid += value;
+    }
+
+    public boolean isCardsChangeCompleted() {
+        return cardsChangeCompleted;
+    }
+
+    public void setCardsChangeCompleted(boolean cardsChangeCompleted) {
+        this.cardsChangeCompleted = cardsChangeCompleted;
     }
 
     /**
@@ -164,5 +173,17 @@ public class Player {
         }
 
         return result;
+    }
+
+    public Card removeCard(String s) {
+        String[] cardInString = s.split(",");
+        Card toReturn = null;
+        for(int i=0; i<cards.size(); i++) {
+            if(String.valueOf(cards.get(i).getRank()).equals(cardInString[0]) && String.valueOf(cards.get(i).getSuit()).equals(cardInString[1])) {
+                toReturn = cards.get(i);
+                cards.remove(cards.get(i));
+            }
+        }
+        return toReturn;
     }
 }
