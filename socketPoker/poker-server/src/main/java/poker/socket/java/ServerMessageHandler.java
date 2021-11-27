@@ -186,6 +186,7 @@ public class ServerMessageHandler {
                     case "CHANGE_CARDS":
                         int nrOfCardsToChange = Integer.parseInt(msg.get("Decision"));
                         player.setCardsChangeCompleted(true);
+                        player.setSetCompleted(false);
                         for(int i=0; i<nrOfCardsToChange; i++) {
                             Card newCard = game.deck.dealCard();
                             Card oldCard = player.removeCard(msg.get("ToChange"+ i));
@@ -194,7 +195,7 @@ public class ServerMessageHandler {
                         }
                         player.setHand();
                         boolean roundCompleted = true;
-                        for(Player p : game.gamePlayers()) {
+                        for(Player p : game.activePlayers()) {
                             if(!p.isCardsChangeCompleted()) {
                                 roundCompleted = false;
                             }
@@ -219,6 +220,7 @@ public class ServerMessageHandler {
                                 + "-" + player.handToString();
                         break;
                     case "SECOND_BETTING":
+                        player.setCardsChangeCompleted(false);
                         playerDecision = msg.get("Decision");
                         switch (playerDecision){
 //                            case "Check":
