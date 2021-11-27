@@ -24,6 +24,8 @@ public class Game {
     private Round round;
     private boolean initialized = false;
     private Player potWinner = null;
+    private Player winner = null;
+    private boolean finished = false;
 
     public enum Round {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
@@ -173,6 +175,22 @@ public class Game {
         this.potWinner = potWinner;
     }
 
+    public Player getWinner() {
+        return potWinner;
+    }
+
+    public void setWinner(Player potWinner) {
+        this.potWinner = potWinner;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
     public void addActivePlayer(Player p) {
         if (!activePlayers.contains(p)) {
             activePlayers.add(p);
@@ -292,7 +310,7 @@ public class Game {
     }
 
     public void distributePot() {
-        playersByHand.get(0).setMoney(pot);
+        playersByHand.get(0).updateMoney(pot);
         setPot(0);
         for(Player p : players) {
             p.setInPot(0);
@@ -302,6 +320,26 @@ public class Game {
     }
 
     public void proceedAfterComparingCards() {
-
+        int countOfActivePlayers = 0;
+        activePlayers.clear();
+        for(int i=0; i<players.size(); i++) {
+            if(players.get(i).getMoney()==0) {
+                players.get(i).setCurrentGameId(-1);
+                players.get(i).setActive(false);
+            }
+            if(players.get(i).isActive()) {
+                countOfActivePlayers++;
+                activePlayers.add(players.get(i));
+            }
+        }
+        if(activePlayers.size() > 1) {
+            //new set
+        }
+        else {
+            //game over
+            winner = activePlayers.get(0);
+            finished = true;
+            //round = Round.GAME_OVER;
+        }
     }
 }

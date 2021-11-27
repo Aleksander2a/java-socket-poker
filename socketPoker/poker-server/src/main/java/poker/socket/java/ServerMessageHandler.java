@@ -130,9 +130,11 @@ public class ServerMessageHandler {
                     game = g;
                 }
             }
-            for (Player p : game.gamePlayers()) {
-                if (p.getId() == Integer.parseInt(msg.get("PlayerID"))) {
-                    player = p;
+            if(game != null) {
+                for (Player p : game.gamePlayers()) {
+                    if (p.getId() == Integer.parseInt(msg.get("PlayerID"))) {
+                        player = p;
+                    }
                 }
             }
             gameRound = String.valueOf(game.getRound());
@@ -258,7 +260,21 @@ public class ServerMessageHandler {
                         }
                         else {
                             //TODO: proceed after comparing cards (New set or game over)
+                            if(player.getMoney()==0) {
+                                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                                        + "-GameRound:" + gameRound + "-Bankrupt:Yes";
+                            }
                             game.proceedAfterComparingCards();
+                            if(game.activePlayers().size() == 1) {
+                                if(game.getWinner().getId()==Integer.parseInt(msg.get("PlayerID"))) {
+                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                                            + "-GameRound:COMPARING_CARDS" + "-Winner:Yes";
+                                }
+                                //Server.games.remove(game);
+                            }
+                            else {
+
+                            }
                         }
                         break;
                 }

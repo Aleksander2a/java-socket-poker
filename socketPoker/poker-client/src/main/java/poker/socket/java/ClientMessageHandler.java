@@ -100,19 +100,21 @@ public class ClientMessageHandler {
         if(msg.get("State").equals("IN_GAME")) {
             //TODO: receives info about game and reacts accordingly
             Game.Round gameRound = Game.Round.valueOf(msg.get("GameRound"));
-            gameInfoEncoder(msg.get("GameInfo"));
-            System.out.println("Your cards:");
-            Pattern cardPattern = Pattern.compile("Card[0-4]");
             ArrayList<Card> playerCards = new ArrayList<>();
-            String handToPrint = "|";
-            for (String key : msg.keySet()) {
-                Matcher cardMatcher = cardPattern.matcher(key);
-                if(cardMatcher.find()) {
-                    handToPrint += msg.get(key) + "|";
-                    playerCards.add(new Card(msg.get(key)));
+            if(!msg.containsKey("Bankrupt") && !msg.containsKey("Winner")) {
+                gameInfoEncoder(msg.get("GameInfo"));
+                System.out.println("Your cards:");
+                Pattern cardPattern = Pattern.compile("Card[0-4]");
+                String handToPrint = "|";
+                for (String key : msg.keySet()) {
+                    Matcher cardMatcher = cardPattern.matcher(key);
+                    if (cardMatcher.find()) {
+                        handToPrint += msg.get(key) + "|";
+                        playerCards.add(new Card(msg.get(key)));
+                    }
                 }
+                System.out.println(handToPrint);
             }
-            System.out.println(handToPrint);
             if(!gameRound.equals(Game.Round.COMPARING_CARDS) && !msg.get("Turn").equals(msg.get("PlayerID"))) {
                 System.out.println("NOT your turn! Press ENTER to refresh");
                 inputString = scanner.nextLine();
@@ -254,6 +256,104 @@ public class ClientMessageHandler {
                     }
                     break;
                 case COMPARING_CARDS:
+                    if(msg.containsKey("Bankrupt")) {
+                        if(msg.get("Bankrupt").equals("Yes")) {
+                            System.out.println("You are out of the game! Want to play again? (yes/no)");
+                            inputString = scanner.nextLine();
+                            while(!inputString.equals("yes") && !inputString.equals("no")) {
+                                System.out.println("Want to play again? (yes/no)");
+                                inputString = scanner.nextLine();
+                            }
+                            if(inputString.equals("yes")) {
+                                //go to join/create game
+                                answer += "State:JOIN_OR_CREATE_GAME-";
+                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
+                                System.out.println("There are " + msg.get("GameNumber") + " game(s) to join:");
+                                Pattern gamePattern = Pattern.compile("Game[0-9]");
+                                Set<String> availableGames = new HashSet<>();
+                                for (String key : msg.keySet()) {
+                                    Matcher gameMatcher = gamePattern.matcher(key);
+                                    if(gameMatcher.find()) {
+                                        System.out.println(key + ": Max players: " + msg.get(key));
+                                        availableGames.add(key);
+                                    }
+                                }
+                                System.out.println("Do you want to join an existing game or create new game?(join/new)");
+                                inputString = scanner.nextLine();
+                                while (!inputString.equals("join") && !inputString.equals("new")) {
+                                    System.out.println("Provide valid input: \"join\" or \"new\"");
+                                    inputString = scanner.nextLine();
+                                }
+                                if(inputString.equals("join")) {
+                                    answer += "Decision:join-";
+                                    System.out.println("Which game do you want to join?");
+                                    inputString = scanner.nextLine();
+                                    while (!availableGames.contains(inputString)) {
+                                        System.out.println("Provide a valid game that is available");
+                                        inputString = scanner.nextLine();
+                                    }
+                                    String chosenGame =  "" + inputString.charAt(4);
+                                    answer += "Joins:" + chosenGame + "-";
+                                }
+                                else if(inputString.equals("new")) {
+                                    answer += "Decision:new-";
+                                }
+                            }
+                            else {
+                                System.out.println("Bye");
+                                System.exit(0);
+                            }
+                        }
+                    }
+                    if(msg.containsKey("Winner")) {
+                        if(msg.get("Winner").equals("Yes")) {
+                            System.out.println("You won the game! Want to play again? (yes/no)");
+                            inputString = scanner.nextLine();
+                            while(!inputString.equals("yes") && !inputString.equals("no")) {
+                                System.out.println("Want to play again? (yes/no)");
+                                inputString = scanner.nextLine();
+                            }
+                            if(inputString.equals("yes")) {
+                                //go to join/create game
+                                answer += "State:JOIN_OR_CREATE_GAME-";
+                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
+                                System.out.println("There are " + msg.get("GameNumber") + " game(s) to join:");
+                                Pattern gamePattern = Pattern.compile("Game[0-9]");
+                                Set<String> availableGames = new HashSet<>();
+                                for (String key : msg.keySet()) {
+                                    Matcher gameMatcher = gamePattern.matcher(key);
+                                    if(gameMatcher.find()) {
+                                        System.out.println(key + ": Max players: " + msg.get(key));
+                                        availableGames.add(key);
+                                    }
+                                }
+                                System.out.println("Do you want to join an existing game or create new game?(join/new)");
+                                inputString = scanner.nextLine();
+                                while (!inputString.equals("join") && !inputString.equals("new")) {
+                                    System.out.println("Provide valid input: \"join\" or \"new\"");
+                                    inputString = scanner.nextLine();
+                                }
+                                if(inputString.equals("join")) {
+                                    answer += "Decision:join-";
+                                    System.out.println("Which game do you want to join?");
+                                    inputString = scanner.nextLine();
+                                    while (!availableGames.contains(inputString)) {
+                                        System.out.println("Provide a valid game that is available");
+                                        inputString = scanner.nextLine();
+                                    }
+                                    String chosenGame =  "" + inputString.charAt(4);
+                                    answer += "Joins:" + chosenGame + "-";
+                                }
+                                else if(inputString.equals("new")) {
+                                    answer += "Decision:new-";
+                                }
+                            }
+                            else {
+                                System.out.println("Bye");
+                                System.exit(0);
+                            }
+                        }
+                    }
                     if(!msg.containsKey("PotWinner")) {
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID") + "-Decision:Unseen";
                         System.out.println("Show off your cards! Press ENTER to continue");
