@@ -24,6 +24,7 @@ public class ServerMessageHandler {
         int money = 0;
         int maxBid = 0;
         int myBid = 0;
+        String infoIfAllFolded = "00";
         int playersToCompleteSet = 0;
         Player.Action action = Player.Action.NONE;
         //answer += "State:" + msg.get("State") + "|";
@@ -143,12 +144,21 @@ public class ServerMessageHandler {
             gameRound = String.valueOf(game.getRound());
             if(msg.get("Decision").equals("Refresh")) {
                 answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
-                        + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                        + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-AllFolded:" + game.isAllFolded() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
                         + "-" + player.handToString();
                 return answer;
             }
             else {
+                int countOfNone = 0;
+                for(Player p : game.activePlayers()) {
+                    if(p.getAction().equals(Player.Action.NONE)) {
+                        countOfNone++;
+                    }
+                }
+                if(countOfNone==game.activePlayers().size()) {
+                    game.setAllFolded("00");
+                }
                 switch (gameRound) {
                     case "FIRST_BETTING":
                         String playerDecision = msg.get("Decision");
@@ -157,7 +167,7 @@ public class ServerMessageHandler {
 //                                break;
                             case "Fold":
                                 player.setAction(Player.Action.FOLD);
-                                game.playerFolds(player);
+                                //game.playerFolds(player);
                                 // TODO: Proceed game status
                                 //game.proceedBettingRound();
                                 break;
@@ -177,13 +187,19 @@ public class ServerMessageHandler {
                         //game.nextTurn();
                         // TODO: Proceed game status
                         game.proceedBettingRound();
-                        gameRound = String.valueOf(game.getRound());
+                        if(!game.isAllFolded().equals("00")) {
+                            game.setRound(Game.Round.FIRST_BETTING);
+                            for(int i=0; i<game.gamePlayers().size(); i++) {
+                                game.gamePlayers().get(i).setAction(Player.Action.NONE);
+                            }
+                        }
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
-                                + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                + "-GameID:" + msg.get("GameID") + "-GameRound:" + game.getRound() + "-AllFolded:" + game.isAllFolded() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                 + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
                                 + "-" + player.handToString();
                         break;
                     case "CHANGE_CARDS":
+                        game.setAllFolded("00");
                         int nrOfCardsToChange = Integer.parseInt(msg.get("Decision"));
                         player.setCardsChangeCompleted(true);
                         player.setSetCompleted(false);
@@ -247,13 +263,19 @@ public class ServerMessageHandler {
                         //game.nextTurn();
                         // TODO: Proceed game status
                         game.proceedBettingRound();
-                        gameRound = String.valueOf(game.getRound());
+                        if(!game.isAllFolded().equals("00")) {
+                            game.setRound(Game.Round.FIRST_BETTING);
+                            for(int i=0; i<game.gamePlayers().size(); i++) {
+                                game.gamePlayers().get(i).setAction(Player.Action.NONE);
+                            }
+                        }
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
-                                + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                + "-GameID:" + msg.get("GameID") + "-GameRound:" + game.getRound() + "-AllFolded:" + game.isAllFolded() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                 + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
                                 + "-" + player.handToString();
                         break;
                     case "COMPARING_CARDS":
+                        game.setAllFolded("00");
                         if(msg.get("Decision").equals("Unseen")) {
                             game.comparePlayersCards();
                             game.distributePot();

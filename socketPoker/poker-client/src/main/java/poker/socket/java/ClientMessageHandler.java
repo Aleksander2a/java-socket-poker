@@ -101,6 +101,11 @@ public class ClientMessageHandler {
             //TODO: receives info about game and reacts accordingly
             Game.Round gameRound = Game.Round.valueOf(msg.get("GameRound"));
             ArrayList<Card> playerCards = new ArrayList<>();
+            if(msg.containsKey("AllFolded")) {
+                if(!msg.get("AllFolded").equals("00")) {
+                    System.out.println("Player" + msg.get("AllFolded") + " wins the pot, as everyone else folded! Starting new set...");
+                }
+            }
             if(!msg.containsKey("Bankrupt") && !msg.containsKey("Winner")) {
                 gameInfoEncoder(msg.get("GameInfo"));
                 System.out.println("Your cards:");
@@ -255,6 +260,9 @@ public class ClientMessageHandler {
                             break;
                     }
                     break;
+//                case SET_OVER:
+//                    System.out.println();
+//                    break;
                 case COMPARING_CARDS:
                     if(msg.containsKey("Bankrupt")) {
                         if(msg.get("Bankrupt").equals("Yes")) {

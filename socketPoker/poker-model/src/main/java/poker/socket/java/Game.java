@@ -27,6 +27,9 @@ public class Game {
     private Player winner = null;
     private boolean finished = false;
     private boolean setProceeded = false;
+    private String allFolded = "00";
+    private boolean roundProceeded = false;
+    private int playersToProceedRound = 0;
 
     public enum Round {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
@@ -109,6 +112,14 @@ public class Game {
 
     public void playerFolds(Player p) {
         activePlayers.remove(p);
+    }
+
+    public String isAllFolded() {
+        return allFolded;
+    }
+
+    public void setAllFolded(String allFolded) {
+        this.allFolded = allFolded;
     }
 
     public void addPlayer(Player p) {
@@ -200,6 +211,26 @@ public class Game {
         this.setProceeded = setProceeded;
     }
 
+    public boolean isRoundProceeded() {
+        return roundProceeded;
+    }
+
+    public void setRoundProceeded(boolean roundProceeded) {
+        this.roundProceeded = roundProceeded;
+    }
+
+    public int getPlayersToProceedRound() {
+        return playersToProceedRound;
+    }
+
+    public void setPlayersToProceedRound(int playersToProceedRound) {
+        this.playersToProceedRound = playersToProceedRound;
+    }
+
+    public void updatePlayersToProceedRound(int playersToProceedRound) {
+        this.playersToProceedRound += playersToProceedRound;
+    }
+
     public void addActivePlayer(Player p) {
         if (!activePlayers.contains(p)) {
             activePlayers.add(p);
@@ -250,7 +281,13 @@ public class Game {
     }
 
     public void proceedBettingRound() {
-        if(activePlayers.size()>1) {
+        int biddingPlayersCount = 0;
+        for(Player p : activePlayers) {
+            if(p.isActive() && !p.getAction().equals(Player.Action.FOLD)) {
+                biddingPlayersCount++;
+            }
+        }
+        if(biddingPlayersCount>1) {
             boolean areEqual = true;
             for(Player p : activePlayers) {
                 if(p.getBid() != maxBid) {
@@ -278,8 +315,47 @@ public class Game {
         }
         else {
             round = Round.SET_OVER;
-            activePlayers.get(0).updateMoney(pot);
-        }
+            for(int i=0; i<activePlayers.size(); i++) {
+                if(activePlayers.get(i).getAction().equals(Player.Action.BID)) {
+                    activePlayers.get(i).updateMoney(pot);
+                    allFolded = String.valueOf(activePlayers.get(i).getId());
+                }
+                //activePlayers.get(i).setAction(Player.Action.NONE);
+                activePlayers.get(i).setInPot(0);
+                activePlayers.get(i).setBid(0);
+                for(int j=0; j<5; j++) {
+                    Card activePlayerCard = activePlayers.get(i).getCardAtIndex(0);
+                    deck.addCard(activePlayerCard);
+                    activePlayers.get(i).removeCard(activePlayerCard);
+                }
+                //takeAnteFromPlayer();
+                for(int n=0; n<5; n++) {
+                    activePlayers.get(i).addCard(deck.dealCard());
+                }
+                activePlayers.get(i).setHand();
+                }
+            maxBid = 0;
+            pot = 0;
+            boolean newDealerFound = false;
+            int index = dealer.getId() + 1;
+            int dealerIndex;
+            while(!newDealerFound) {
+                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+                    dealer = activePlayers.get((index) % activePlayers.size());
+                    dealerIndex = index;
+                    newDealerFound = true;
+                }
+                index++;
+            }
+            boolean newTurnFound = false;
+            while(!newTurnFound) {
+                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+                    playerTurn = activePlayers.get((index) % activePlayers.size());
+                    newTurnFound = true;
+                }
+                index++;
+            }
+            }
     }
 
 //    public void proceedChangeRound() {
