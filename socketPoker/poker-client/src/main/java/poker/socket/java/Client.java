@@ -36,7 +36,7 @@ public class Client
 
             while ((fromServer = in.readLine()) != null) {
                 // encode fromServer
-                System.out.println("Server: " + fromServer);
+                //System.out.println("Server: " + fromServer);
                 encodedFromServer = ClientMessageHandler.encode(fromServer);
                 // react
                 fromClient = ClientMessageHandler.answerToMessage(encodedFromServer);
@@ -46,7 +46,7 @@ public class Client
                 // get response from Client - OLD KK VERSION
                 //fromClient = stdIn.readLine();
                 if (fromClient != null) {
-                    System.out.println("Client: " + fromClient);
+                    //System.out.println("Client: " + fromClient);
                     out.println(fromClient);
                 }
             }

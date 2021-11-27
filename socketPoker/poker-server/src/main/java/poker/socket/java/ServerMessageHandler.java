@@ -150,15 +150,15 @@ public class ServerMessageHandler {
                 return answer;
             }
             else {
-                int countOfNone = 0;
-                for(Player p : game.activePlayers()) {
-                    if(p.getAction().equals(Player.Action.NONE)) {
-                        countOfNone++;
-                    }
-                }
-                if(countOfNone==game.activePlayers().size()) {
-                    game.setAllFolded("00");
-                }
+//                int countOfNone = 0;
+//                for(Player p : game.activePlayers()) {
+//                    if(p.getAction().equals(Player.Action.NONE)) {
+//                        countOfNone++;
+//                    }
+//                }
+//                if(countOfNone==game.activePlayers().size()) {
+//                    game.setAllFolded("00");
+//                }
                 switch (gameRound) {
                     case "FIRST_BETTING":
                         String playerDecision = msg.get("Decision");
@@ -167,6 +167,7 @@ public class ServerMessageHandler {
 //                                break;
                             case "Fold":
                                 player.setAction(Player.Action.FOLD);
+                                game.setAllFolded("00");
                                 //game.playerFolds(player);
                                 // TODO: Proceed game status
                                 //game.proceedBettingRound();
@@ -180,6 +181,7 @@ public class ServerMessageHandler {
                                 player.setAction(Player.Action.BID);
                                 game.setMaxBid(Math.max(playerBid, game.getMaxBid()));
                                 game.updatePot();
+                                game.setAllFolded("00");
                                 //TODO: Proceed game status
                                 //game.proceedBettingRound();
                                 break;
@@ -200,6 +202,7 @@ public class ServerMessageHandler {
                         break;
                     case "CHANGE_CARDS":
                         game.setAllFolded("00");
+                        player.setAction(Player.Action.NONE);
                         int nrOfCardsToChange = Integer.parseInt(msg.get("Decision"));
                         player.setCardsChangeCompleted(true);
                         player.setSetCompleted(false);

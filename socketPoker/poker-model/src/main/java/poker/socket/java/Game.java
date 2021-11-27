@@ -30,6 +30,7 @@ public class Game {
     private String allFolded = "00";
     private boolean roundProceeded = false;
     private int playersToProceedRound = 0;
+    public boolean anteTaken = false;
 
     public enum Round {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
@@ -145,6 +146,7 @@ public class Game {
                 p.setActive(false);
             }
         }
+        anteTaken = true;
     }
 
     public String gameInfo() {
@@ -288,12 +290,15 @@ public class Game {
             }
         }
         if(biddingPlayersCount>1) {
-            boolean areEqual = true;
+            boolean areEqual = false;
+            int countOfTrue = 0;
             for(Player p : activePlayers) {
-                if(p.getBid() != maxBid) {
-                    areEqual = false;
-                    break;
+                if((p.getBid()==maxBid && !p.getAction().equals(Player.Action.NONE)) || (p.getInPot()!=0 && p.getMoney()==0)) {
+                    countOfTrue++;
                 }
+            }
+            if(countOfTrue==activePlayers.size()) {
+                areEqual = true;
             }
             if(areEqual) {
                 maxBid = 0;
