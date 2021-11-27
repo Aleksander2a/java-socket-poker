@@ -19,6 +19,7 @@ public class Player {
     private int currentGameId;
     private Hand hand;
     private boolean cardsChangeCompleted = false;
+    private boolean setCompleted = false;
 
     public enum Action {
         NONE, CHECK, FOLD, BID
@@ -85,6 +86,18 @@ public class Player {
 
     public void setCardsChangeCompleted(boolean cardsChangeCompleted) {
         this.cardsChangeCompleted = cardsChangeCompleted;
+    }
+
+    public boolean isSetCompleted() {
+        return setCompleted;
+    }
+
+    public void setSetCompleted(boolean setCompleted) {
+        this.setCompleted = setCompleted;
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
     }
 
     /**

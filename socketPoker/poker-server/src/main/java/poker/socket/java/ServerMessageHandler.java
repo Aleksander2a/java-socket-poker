@@ -24,6 +24,7 @@ public class ServerMessageHandler {
         int money = 0;
         int maxBid = 0;
         int myBid = 0;
+        int playersToCompleteSet = 0;
         Player.Action action = Player.Action.NONE;
         //answer += "State:" + msg.get("State") + "|";
         //answer += "ID:" + msg.get("ID") + "|";
@@ -44,6 +45,7 @@ public class ServerMessageHandler {
                 if(game.getPlayersNumber() == game.getMaxPlayersNumber()) {
                     //TODO: add info about game when IN_GAME
                     game.initializeGame();
+                    game.setRound(Game.Round.FIRST_BETTING);
                     gameRound = String.valueOf(game.getRound());
                     playerTurnId = game.getPlayerTurn().getId();
                     maxBid = game.getMaxBid();
@@ -98,6 +100,7 @@ public class ServerMessageHandler {
             if(game.getPlayersNumber()==game.getMaxPlayersNumber()) {
                 //TODO: add info about game when IN_GAME
                 game.initializeGame();
+                game.setRound(Game.Round.FIRST_BETTING);
                 gameRound = String.valueOf(game.getRound());
                 playerTurnId = game.getPlayerTurn().getId();
                 maxBid = game.getMaxBid();
@@ -260,11 +263,22 @@ public class ServerMessageHandler {
                         }
                         else {
                             //TODO: proceed after comparing cards (New set or game over)
+                            player.setSetCompleted(true);
+                            int count = 0;
+                            for(Player p : game.activePlayers()) {
+                                if(p.isSetCompleted()) {
+                                    count++;
+                                }
+                            }
+                            playersToCompleteSet = count;
                             if(player.getMoney()==0) {
                                 answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                         + "-GameRound:" + gameRound + "-Bankrupt:Yes";
                             }
-                            game.proceedAfterComparingCards();
+                            if(!game.isSetProceeded()) {
+                                game.proceedAfterComparingCards();
+                                game.setSetProceeded(true);
+                            }
                             if(game.activePlayers().size() == 1) {
                                 if(game.getWinner().getId()==Integer.parseInt(msg.get("PlayerID"))) {
                                     answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
@@ -273,7 +287,19 @@ public class ServerMessageHandler {
                                 //Server.games.remove(game);
                             }
                             else {
-
+                                //while(playersToCompleteSet!=game.activePlayers().size()) {;}
+                                game.setRound(Game.Round.FIRST_BETTING);
+                                gameRound = String.valueOf(game.getRound());
+                                answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
+                                        + "-GameID:" + msg.get("GameID") + "-GameRound:FIRST_BETTING" + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                        + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
+                                        + "-" + player.handToString();
+                                game.setRound(Game.Round.COMPARING_CARDS);
+                                if(playersToCompleteSet == game.activePlayers().size()) {
+                                    game.setRound(Game.Round.FIRST_BETTING);
+                                    playersToCompleteSet = 0;
+                                    game.setSetProceeded(false);
+                                }
                             }
                         }
                         break;
