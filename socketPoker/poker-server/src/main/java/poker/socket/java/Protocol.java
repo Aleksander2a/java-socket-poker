@@ -25,6 +25,7 @@ public class Protocol {
                 Player client = new Player(Server.nextPlayerId);
                 Server.nextPlayerId++;
                 Server.clients.add(client);
+                //TODO: Add refresh option to see newly created games
                 if(Server.games.isEmpty()) {
                     state = State.NEW_GAME;
                 }

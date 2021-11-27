@@ -285,6 +285,7 @@ public class ClientMessageHandler {
                                     inputString = scanner.nextLine();
                                 }
                                 if(inputString.equals("join")) {
+                                    //TODO: list available games with refresh option
                                     answer += "Decision:join-";
                                     System.out.println("Which game do you want to join?");
                                     inputString = scanner.nextLine();
@@ -294,9 +295,11 @@ public class ClientMessageHandler {
                                     }
                                     String chosenGame =  "" + inputString.charAt(4);
                                     answer += "Joins:" + chosenGame + "-";
+                                    return answer;
                                 }
                                 else if(inputString.equals("new")) {
                                     answer += "Decision:new-";
+                                    return answer;
                                 }
                             }
                             else {
@@ -334,6 +337,7 @@ public class ClientMessageHandler {
                                     inputString = scanner.nextLine();
                                 }
                                 if(inputString.equals("join")) {
+                                    //TODO: list available games with refresh option
                                     answer += "Decision:join-";
                                     System.out.println("Which game do you want to join?");
                                     inputString = scanner.nextLine();
@@ -343,9 +347,11 @@ public class ClientMessageHandler {
                                     }
                                     String chosenGame =  "" + inputString.charAt(4);
                                     answer += "Joins:" + chosenGame + "-";
+                                    return answer;
                                 }
                                 else if(inputString.equals("new")) {
                                     answer += "Decision:new-";
+                                    return answer;
                                 }
                             }
                             else {
