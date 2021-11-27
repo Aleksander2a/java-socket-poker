@@ -221,6 +221,10 @@ public class Game {
                 }
             }
             if(areEqual) {
+                maxBid = 0;
+                for(Player p : players) {
+                    p.setBid(0);
+                }
                 nextPhase();
                 resetTurnOnNewPhase();
             }

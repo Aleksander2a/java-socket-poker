@@ -126,8 +126,8 @@ public class ClientMessageHandler {
                     //if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyBid"))) {}
                     //if(msg.get("MyAction").equals("NONE")) {
                     //TODO: Game verifies if the player needs to make a move
-                    int minBid = 0;
                     //int maxBidDiffMyBid = Integer.parseInt(msg.get("MaxBid")) - Integer.parseInt(msg.get("MyBid"));
+                    int minBid = 0;
                     if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) {
                         minBid = Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"));
                     }
@@ -214,6 +214,44 @@ public class ClientMessageHandler {
                     }
                     break;
                 case SECOND_BETTING:
+                    System.out.println("Your turn!");
+                    //if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyBid"))) {}
+                    //if(msg.get("MyAction").equals("NONE")) {
+                    //TODO: Game verifies if the player needs to make a move
+                    //int maxBidDiffMyBid = Integer.parseInt(msg.get("MaxBid")) - Integer.parseInt(msg.get("MyBid"));
+                    if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) {
+                        minBid = Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"));
+                    }
+                    else {
+                        minBid = Integer.parseInt(msg.get("MaxBid"));
+                    }
+                    System.out.println("What do you want do: Fold OR Bid ?");
+                    inputString = scanner.nextLine();
+                    while(!inputString.equals("Fold") && !inputString.equals("Bid")) {
+                        System.out.println("What do you want do: Fold OR Bid ?");
+                        inputString = scanner.nextLine();
+                    }
+                    switch (inputString) {
+//                               case "Check":
+//                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+//                                            + "-Decision:Check";
+//                                    break;
+                        case "Fold":
+                            answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+                                    + "-Decision:Fold";
+                            break;
+                        case "Bid":
+                            answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
+                                    + "-Decision:Bid";
+                            System.out.println("How much do you want to bid? " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                            inputString = scanner.nextLine();
+                            while(inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) || Integer.parseInt(inputString) < minBid)) {
+                                System.out.println("Invalid amount. Provide number between: " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                                inputString = scanner.nextLine();
+                            }
+                            answer += "-Bid:" + inputString;
+                            break;
+                    }
                     break;
                 case COMPARING_CARDS:
                     break;
