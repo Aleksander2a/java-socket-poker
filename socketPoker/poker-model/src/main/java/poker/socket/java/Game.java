@@ -1,6 +1,7 @@
 package poker.socket.java;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
 
@@ -19,8 +20,10 @@ public class Game {
     private Player playerTurn;
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Player> activePlayers = new ArrayList<>();
+    private ArrayList<Player> playersByHand = new ArrayList<>();
     private Round round;
     private boolean initialized = false;
+    private Player potWinner = null;
 
     public enum Round {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
@@ -162,6 +165,14 @@ public class Game {
         return  activePlayers;
     }
 
+    public Player getPotWinner() {
+        return potWinner;
+    }
+
+    public void setPotWinner(Player potWinner) {
+        this.potWinner = potWinner;
+    }
+
     public void addActivePlayer(Player p) {
         if (!activePlayers.contains(p)) {
             activePlayers.add(p);
@@ -244,9 +255,9 @@ public class Game {
         }
     }
 
-    public void proceedChangeRound() {
-
-    }
+//    public void proceedChangeRound() {
+//
+//    }
 
     public void resetTurnOnNewPhase() {
         Player cardDealer;
@@ -266,5 +277,31 @@ public class Game {
             }
             index++;
         }
+    }
+
+    static class SortPlayersByHand implements Comparator<Player> {
+        @Override
+        public int compare(Player o1, Player o2) {
+            return -o1.getHand().compareTo(o2.getHand());
+        }
+    }
+
+    public void comparePlayersCards() {
+        playersByHand = activePlayers;
+        playersByHand.sort(new SortPlayersByHand());
+    }
+
+    public void distributePot() {
+        playersByHand.get(0).setMoney(pot);
+        setPot(0);
+        for(Player p : players) {
+            p.setInPot(0);
+            p.setAction(Player.Action.NONE);
+        }
+        potWinner = playersByHand.get(0);
+    }
+
+    public void proceedAfterComparingCards() {
+
     }
 }

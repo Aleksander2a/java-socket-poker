@@ -247,6 +247,19 @@ public class ServerMessageHandler {
                                 + "-" + player.handToString();
                         break;
                     case "COMPARING_CARDS":
+                        if(msg.get("Decision").equals("Unseen")) {
+                            game.comparePlayersCards();
+                            game.distributePot();
+                            gameRound = String.valueOf(game.getRound());
+                            answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                                    + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-PotWinner:" + game.getPotWinner().getId() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                    + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
+                                    + "-" + player.handToString();
+                        }
+                        else {
+                            //TODO: proceed after comparing cards (New set or game over)
+                            game.proceedAfterComparingCards();
+                        }
                         break;
                 }
             }

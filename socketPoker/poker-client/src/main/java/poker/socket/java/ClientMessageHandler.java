@@ -113,7 +113,7 @@ public class ClientMessageHandler {
                 }
             }
             System.out.println(handToPrint);
-            if(!msg.get("Turn").equals(msg.get("PlayerID"))) {
+            if(!gameRound.equals(Game.Round.COMPARING_CARDS) && !msg.get("Turn").equals(msg.get("PlayerID"))) {
                 System.out.println("NOT your turn! Press ENTER to refresh");
                 inputString = scanner.nextLine();
                 answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
@@ -254,6 +254,17 @@ public class ClientMessageHandler {
                     }
                     break;
                 case COMPARING_CARDS:
+                    if(!msg.containsKey("PotWinner")) {
+                        answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID") + "-Decision:Unseen";
+                        System.out.println("Show off your cards! Press ENTER to continue");
+                        inputString = scanner.nextLine();
+                    }
+                    else {
+                        System.out.println("Player" + msg.get("PotWinner") + " won the pot!");
+                        System.out.println("Press ENTER to continue");
+                        inputString = scanner.nextLine();
+                        answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID") + "-Decision:Seen";
+                    }
                     break;
             }
         }
