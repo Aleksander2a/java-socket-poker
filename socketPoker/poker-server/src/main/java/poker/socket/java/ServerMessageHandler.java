@@ -39,6 +39,7 @@ public class ServerMessageHandler {
                 }
                 for(Player p : Server.clients) {
                     if(p.getId() == Integer.parseInt(msg.get("PlayerID"))) {
+                        //if()
                         game.addPlayer(p);
                         p.setCurrentGameId(game.getId());
                     }
