@@ -216,7 +216,13 @@ public class ServerMessageHandler {
                         if(!allNone) {
                             game.proceedBettingRound();
                         }
-                        else {
+                        boolean allWithNoInPot = true;
+                        for(Player p : game.activePlayers()) {
+                            if(p.getInPot()!=0) {
+                                allWithNoInPot = false;
+                            }
+                        }
+                        if(allWithNoInPot) {
                             game.takeAnteFromPlayer();
                         }
                         if(!game.isAllFolded().equals("00")) {
@@ -305,6 +311,15 @@ public class ServerMessageHandler {
                         }
                         if(!allNone) {
                             game.proceedBettingRound();
+                        }
+                        allWithNoInPot = true;
+                        for(Player p : game.activePlayers()) {
+                            if(p.getInPot()!=0) {
+                                allWithNoInPot = false;
+                            }
+                        }
+                        if(allWithNoInPot) {
+                            game.takeAnteFromPlayer();
                         }
                         //game.proceedBettingRound();
                         if(!game.isAllFolded().equals("00")) {
