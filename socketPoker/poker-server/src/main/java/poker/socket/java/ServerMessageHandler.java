@@ -206,7 +206,16 @@ public class ServerMessageHandler {
 //                        if(!anteTaken) {
 //                            game.takeAnteFromPlayer();
 //                        }
-                        game.proceedBettingRound();
+                        //System.out.println("Player turn in fb" + game.getPlayerTurn().getId());
+                        boolean allNone = true;
+                        for(Player p : game.activePlayers()) {
+                            if(!p.getAction().equals(Player.Action.NONE)) {
+                                allNone = false;
+                            }
+                        }
+                        if(!allNone) {
+                            game.proceedBettingRound();
+                        }
                         if(!game.isAllFolded().equals("00")) {
                             game.setRound(Game.Round.FIRST_BETTING);
                             for(int i=0; i<game.gamePlayers().size(); i++) {
@@ -264,7 +273,8 @@ public class ServerMessageHandler {
 //                                break;
                             case "Fold":
                                 player.setAction(Player.Action.FOLD);
-                                game.playerFolds(player);
+                                game.setAllFolded("00");
+                                //game.playerFolds(player);
                                 // TODO: Proceed game status
                                 //game.proceedBettingRound();
                                 break;
@@ -277,13 +287,23 @@ public class ServerMessageHandler {
                                 player.setAction(Player.Action.BID);
                                 game.setMaxBid(Math.max(playerBid, game.getMaxBid()));
                                 game.updatePot();
+                                game.setAllFolded("00");
                                 //TODO: Proceed game status
                                 //game.proceedBettingRound();
                                 break;
                         }
                         //game.nextTurn();
                         // TODO: Proceed game status
-                        game.proceedBettingRound();
+                        allNone = true;
+                        for(Player p : game.activePlayers()) {
+                            if(!p.getAction().equals(Player.Action.NONE)) {
+                                allNone = false;
+                            }
+                        }
+                        if(!allNone) {
+                            game.proceedBettingRound();
+                        }
+                        //game.proceedBettingRound();
                         if(!game.isAllFolded().equals("00")) {
                             game.setRound(Game.Round.FIRST_BETTING);
                             for(int i=0; i<game.gamePlayers().size(); i++) {
@@ -320,7 +340,7 @@ public class ServerMessageHandler {
                                 answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                         + "-GameRound:" + gameRound + "-Bankrupt:Yes";
                             }
-                            if(!game.isSetProceeded()) {
+                            if(playersToCompleteSet == game.activePlayers().size()) {
                                 game.proceedAfterComparingCards();
                                 game.setSetProceeded(true);
                             }
@@ -344,6 +364,24 @@ public class ServerMessageHandler {
                                 }
                                 game.setRound(Game.Round.FIRST_BETTING);
                                 gameRound = String.valueOf(game.getRound());
+//                                Player cardDealer;
+//                                int index = 0;
+//                                boolean newTurnFound = false;
+//                                for(int i=0; i<game.activePlayers().size(); i++) {
+//                                    if(game.activePlayers().get(i).getId()==game.getDealer().getId()) {
+//                                        cardDealer = game.activePlayers().get(i);
+//                                        index = i;
+//                                    }
+//                                }
+//                                index++;
+//                                while(!newTurnFound) {
+//                                    if(!game.activePlayers().get(index%game.activePlayers().size()).getAction().equals(Player.Action.FOLD)) {
+//                                        game.setPlayerTurn(game.activePlayers().get(index%game.activePlayers().size()));
+//                                        newTurnFound = true;
+//                                    }
+//                                    index++;
+//                                }
+                                System.out.println("Player turn in cc" + game.getPlayerTurn().getId());
                                 answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
                                         + "-GameID:" + msg.get("GameID") + "-GameRound:FIRST_BETTING" + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()

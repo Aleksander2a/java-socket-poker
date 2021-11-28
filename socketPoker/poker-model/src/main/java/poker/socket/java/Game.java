@@ -295,6 +295,7 @@ public class Game {
     }
 
     public void proceedBettingRound() {
+        System.out.println("PROCEEDING BETTING ROUND...");
         int biddingPlayersCount = 0;
         for(Player p : activePlayers) {
             if(p.isActive() && !p.getAction().equals(Player.Action.FOLD)) {
@@ -321,6 +322,23 @@ public class Game {
                 resetTurnOnNewPhase();
             }
             else {
+//                Player cardDealer= null;
+//                int index = 0;
+//                for(int i=0; i<activePlayers.size(); i++) {
+//                    if(activePlayers.get(i).getId()==dealer.getId()) {
+//                        cardDealer = activePlayers.get(i);
+//                        index = i;
+//                    }
+//                }
+//                index++;
+//                boolean newTurnFound = false;
+//                while(!newTurnFound) {
+//                    if(!activePlayers.get(index%activePlayers.size()).getAction().equals(Player.Action.FOLD)) {
+//                        playerTurn = activePlayers.get(index%activePlayers.size());
+//                        newTurnFound = true;
+//                    }
+//                    index++;
+//                }
                 int index=0;
                 for(int i=0; i<activePlayers.size(); i++) {
                     if(activePlayers.get(i).getId()==playerTurn.getId() && !activePlayers.get((i+1)%activePlayers.size()).getAction().equals(Player.Action.FOLD)) {
@@ -351,10 +369,19 @@ public class Game {
                 }
                 activePlayers.get(i).setHand();
                 }
+
+            Player cardDealer= null;
+            int index = 0;
+            for(int i=0; i<activePlayers.size(); i++) {
+                if(activePlayers.get(i).getId()==dealer.getId()) {
+                    cardDealer = activePlayers.get(i);
+                    index = i;
+                }
+            }
             maxBid = 0;
             pot = 0;
             boolean newDealerFound = false;
-            int index = dealer.getId() + 1;
+            index++;
             int dealerIndex;
             while(!newDealerFound) {
                 if(activePlayers.get((index) % activePlayers.size()).isActive()) {
@@ -458,23 +485,53 @@ public class Game {
         if(activePlayers.size() > 1) {
             //new set
             //round = Round.FIRST_BETTING;
-            boolean newDealerFound = false;
-            int index = dealer.getId() + 1;
-            while(!newDealerFound) {
-                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-                    dealer = activePlayers.get((index) % activePlayers.size());
-                    newDealerFound = true;
+            if(!isRoundProceeded()) {
+                Player cardDealer= null;
+                int index = 0;
+                for(int i=0; i<activePlayers.size(); i++) {
+                    if(activePlayers.get(i).getId()==dealer.getId()) {
+                        cardDealer = activePlayers.get(i);
+                        index = i;
+                    }
                 }
+                boolean newDealerFound = false;
                 index++;
-            }
-            boolean newTurnFound = false;
-            while(!newTurnFound) {
-                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-                    playerTurn = activePlayers.get((index) % activePlayers.size());
-                    newTurnFound = true;
+                int dealerIndex;
+                while(!newDealerFound) {
+                    if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+                        dealer = activePlayers.get((index) % activePlayers.size());
+                        dealerIndex = index;
+                        newDealerFound = true;
+                    }
+                    index++;
                 }
-                index++;
+                boolean newTurnFound = false;
+                while(!newTurnFound) {
+                    if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+                        playerTurn = activePlayers.get((index) % activePlayers.size());
+                        newTurnFound = true;
+                    }
+                    index++;
+                }
             }
+
+//            boolean newDealerFound = false;
+//            int index = dealer.getId() + 1;
+//            while(!newDealerFound) {
+//                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+//                    dealer = activePlayers.get((index) % activePlayers.size());
+//                    newDealerFound = true;
+//                }
+//                index++;
+//            }
+//            boolean newTurnFound = false;
+//            while(!newTurnFound) {
+//                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+//                    playerTurn = activePlayers.get((index) % activePlayers.size());
+//                    newTurnFound = true;
+//                }
+//                index++;
+//            }
             for(int i=0; i<activePlayers.size(); i++) {
                 for(int j=0; j<5; j++) {
                     Card activePlayerCard = activePlayers.get(i).getCardAtIndex(0);
