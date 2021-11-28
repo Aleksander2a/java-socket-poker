@@ -132,21 +132,26 @@ public class Game {
         //round = Round.FIRST_BETTING;
         for(Player p : players) {
             if(p.getMoney() != 0 ) {
-                for(int i=0; i<5; i++) {
-                    p.addCard(deck.dealCard());
-                }
                 int pMoney = p.getMoney();
                 p.setMoney(Math.max(pMoney - ante, 0));
                 p.setInPot(pMoney - p.getMoney());
                 pot += p.getInPot();
                 p.setBid(0);
-
             }
             else {
                 p.setActive(false);
             }
         }
         anteTaken = true;
+    }
+
+    public void dealCardsToActivePlayers() {
+        for(Player p : activePlayers) {
+            for(int i=0; i<5; i++) {
+                p.addCard(deck.dealCard());
+            }
+            p.setHand();
+        }
     }
 
     public String gameInfo() {
@@ -258,6 +263,13 @@ public class Game {
             setPlayerTurn(players.get(1));
             giveMoneyToPlayers();
             takeAnteFromPlayer();
+            //dealCardsToActivePlayers();
+            for(Player p : players) {
+                for(int i=0; i<5; i++) {
+                    p.addCard(deck.dealCard());
+                }
+                p.setHand();
+            }
             for (Player p : players) {
                 p.setActive(true);
                 p.setAction(Player.Action.NONE);
@@ -456,7 +468,8 @@ public class Game {
             }
             //new card deal
             maxBid = 0;
-            takeAnteFromPlayer();
+            //takeAnteFromPlayer();
+            dealCardsToActivePlayers();
             for(int n=0 ;n<activePlayers.size(); n++) {
                 activePlayers.get(n).setHand();
             }

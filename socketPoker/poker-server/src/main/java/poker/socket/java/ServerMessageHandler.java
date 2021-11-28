@@ -313,8 +313,17 @@ public class ServerMessageHandler {
                                 }
                                 //Server.games.remove(game);
                             }
-                            else {
+                            else if(playersToCompleteSet == game.activePlayers().size()) {
                                 //while(playersToCompleteSet!=game.activePlayers().size()) {;}
+                                boolean anteTaken = true;
+                                for(Player p : game.activePlayers()) {
+                                    if(p.getInPot()==0) {
+                                        anteTaken = false;
+                                    }
+                                }
+                                if(!anteTaken) {
+                                    game.takeAnteFromPlayer();
+                                }
                                 game.setRound(Game.Round.FIRST_BETTING);
                                 gameRound = String.valueOf(game.getRound());
                                 answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
@@ -327,6 +336,12 @@ public class ServerMessageHandler {
                                     playersToCompleteSet = 0;
                                     game.setSetProceeded(false);
                                 }
+                            }
+                            else {
+                                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
+                                        + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-PotWinner:" + game.getPotWinner().getId() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
+                                        + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
+                                        + "-" + player.handToString();
                             }
                         }
                         break;
