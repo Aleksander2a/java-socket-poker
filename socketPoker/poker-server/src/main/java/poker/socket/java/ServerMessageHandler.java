@@ -216,6 +216,9 @@ public class ServerMessageHandler {
                         if(!allNone) {
                             game.proceedBettingRound();
                         }
+                        else {
+                            game.takeAnteFromPlayer();
+                        }
                         if(!game.isAllFolded().equals("00")) {
                             game.setRound(Game.Round.FIRST_BETTING);
                             for(int i=0; i<game.gamePlayers().size(); i++) {
@@ -381,7 +384,7 @@ public class ServerMessageHandler {
 //                                    }
 //                                    index++;
 //                                }
-                                System.out.println("Player turn in cc" + game.getPlayerTurn().getId());
+                                //.out.println("Player turn in cc" + game.getPlayerTurn().getId());
                                 answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
                                         + "-GameID:" + msg.get("GameID") + "-GameRound:FIRST_BETTING" + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()

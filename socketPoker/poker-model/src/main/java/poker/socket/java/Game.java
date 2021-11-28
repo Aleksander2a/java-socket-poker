@@ -295,7 +295,7 @@ public class Game {
     }
 
     public void proceedBettingRound() {
-        System.out.println("PROCEEDING BETTING ROUND...");
+        //System.out.println("PROCEEDING BETTING ROUND...");
         int biddingPlayersCount = 0;
         for(Player p : activePlayers) {
             if(p.isActive() && !p.getAction().equals(Player.Action.FOLD)) {
