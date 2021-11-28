@@ -251,18 +251,28 @@ public class ServerMessageHandler {
                         player.setHand();
                         boolean roundCompleted = true;
                         for(Player p : game.activePlayers()) {
-                            if(!p.isCardsChangeCompleted()) {
+                            if(!p.isCardsChangeCompleted() && !p.getAction().equals(Player.Action.FOLD)) {
                                 roundCompleted = false;
                             }
                         }
                         if(!roundCompleted) {
                             int index=0;
+                            int indexOfTurn = 0;
+                            boolean newTurnFound = false;
                             for(int i=0; i<game.activePlayers().size(); i++) {
                                 if(game.activePlayers().get(i).getId()==game.getPlayerTurn().getId()) {
-                                    index = (i+1)%game.activePlayers().size();
+                                    indexOfTurn = i;
                                 }
                             }
-                            game.setPlayerTurn(game.activePlayers().get(index));
+                            index = indexOfTurn + 1;
+                            while(!newTurnFound) {
+                                if(!game.activePlayers().get(index%game.activePlayers().size()).getAction().equals(Player.Action.FOLD)) {
+                                    game.setPlayerTurn(game.activePlayers().get(index%game.activePlayers().size()));
+                                    newTurnFound = true;
+                                }
+                                index++;
+                            }
+                            //game.setPlayerTurn(game.activePlayers().get(index));
                         }
                         else {
                             game.setRound(Game.Round.SECOND_BETTING);

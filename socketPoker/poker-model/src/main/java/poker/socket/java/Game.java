@@ -305,8 +305,9 @@ public class Game {
         if(biddingPlayersCount>1) {
             boolean areEqual = false;
             int countOfTrue = 0;
+            //TODO: WHEN 4 PLAYERS AND 1 FOLDS
             for(Player p : activePlayers) {
-                if((p.getBid()==maxBid && !p.getAction().equals(Player.Action.NONE)) || (p.getInPot()!=0 && p.getMoney()==0)) {
+                if((p.getBid()==maxBid && !p.getAction().equals(Player.Action.NONE)) || (p.getInPot()!=0 && p.getMoney()==0) || p.getAction().equals(Player.Action.FOLD)) {
                     countOfTrue++;
                 }
             }
@@ -340,12 +341,22 @@ public class Game {
 //                    index++;
 //                }
                 int index=0;
+                int indexOfTurn = 0;
+                boolean newTurnFound = false;
                 for(int i=0; i<activePlayers.size(); i++) {
-                    if(activePlayers.get(i).getId()==playerTurn.getId() && !activePlayers.get((i+1)%activePlayers.size()).getAction().equals(Player.Action.FOLD)) {
-                        index = (i+1)%activePlayers.size();
+                    if(activePlayers.get(i).getId()==playerTurn.getId()) {
+                        indexOfTurn = i;
                     }
                 }
-                playerTurn = activePlayers.get(index);
+                index = indexOfTurn + 1;
+                while(!newTurnFound) {
+                    if(!activePlayers.get(index%activePlayers.size()).getAction().equals(Player.Action.FOLD)) {
+                        playerTurn = activePlayers.get(index%activePlayers.size());
+                        newTurnFound = true;
+                    }
+                    index++;
+                }
+
             }
         }
         else {
