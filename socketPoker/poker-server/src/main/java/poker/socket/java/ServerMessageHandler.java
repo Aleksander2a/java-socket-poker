@@ -72,6 +72,14 @@ public class ServerMessageHandler {
             else if(msg.get("Decision").equals("new")) {
                 answer += "State:NEW_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-";
             }
+            else if(msg.get("Decision").equals("refresh")) {
+                answer = "State:JOIN_OR_CREATE_GAME-";
+                answer += "PlayerID:" + msg.get("PlayerID") + "-";
+                answer += "GameNumber:" + Server.games.size() + "-";
+                for(Game g : Server.games) {
+                    answer += "Game" + g.getId() + ":" + g.getMaxPlayersNumber() + "-";
+                }
+            }
         }
         if(msg.get("State").equals("NEW_GAME")) {
             // Choose playerNumber

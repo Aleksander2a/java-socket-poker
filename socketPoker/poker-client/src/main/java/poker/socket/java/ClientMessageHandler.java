@@ -30,37 +30,64 @@ public class ClientMessageHandler {
         String answer = "";
         String inputString = "";
         if(msg.get("State").equals("JOIN_OR_CREATE_GAME")) {
+            System.out.println("Welcome to the POKER SERVER!");
             answer += "State:" + msg.get("State") + "-";
             answer += "PlayerID:" + msg.get("PlayerID") + "-";
-            System.out.println("There are " + msg.get("GameNumber") + " game(s) to join:");
+            //System.out.println("There are " + msg.get("GameNumber") + " game(s) to join:");
             Pattern gamePattern = Pattern.compile("Game[0-9]");
             Set<String> availableGames = new HashSet<>();
             for (String key : msg.keySet()) {
                 Matcher gameMatcher = gamePattern.matcher(key);
                 if(gameMatcher.find()) {
-                    System.out.println(key + ": Max players: " + msg.get(key));
+                    //System.out.println(key + ": Max players: " + msg.get(key));
                     availableGames.add(key);
                 }
             }
-            System.out.println("Do you want to join an existing game or create new game?(join/new)");
-            inputString = scanner.nextLine();
-            while (!inputString.equals("join") && !inputString.equals("new")) {
-                System.out.println("Provide valid input: \"join\" or \"new\"");
+            if(availableGames.isEmpty()) {
+                System.out.println("There are no games right now. Do you want to create a new game or refresh? (new/refresh)");
                 inputString = scanner.nextLine();
-            }
-            if(inputString.equals("join")) {
-                answer += "Decision:join-";
-                System.out.println("Which game do you want to join?");
-                inputString = scanner.nextLine();
-                while (!availableGames.contains(inputString)) {
-                    System.out.println("Provide a valid game that is available");
+                while (!inputString.equals("new") && !inputString.equals("refresh")) {
+                    System.out.println("Provide valid input: \"new\" or \"refresh\"");
                     inputString = scanner.nextLine();
                 }
-                String chosenGame =  "" + inputString.charAt(4);
-                answer += "Joins:" + chosenGame + "-";
+                if(inputString.equals("new")) {
+                    answer += "Decision:new-";
+                }
+                else {
+                    answer += "Decision:refresh-";
+                }
             }
-            else if(inputString.equals("new")) {
-                answer += "Decision:new-";
+            else {
+                System.out.println("There is(are) " + msg.get("GameNumber") + " game(s) to join:");
+                for (String key : msg.keySet()) {
+                    Matcher gameMatcher = gamePattern.matcher(key);
+                    if(gameMatcher.find()) {
+                        System.out.println(key + ": Max players: " + msg.get(key));
+                        //availableGames.add(key);
+                    }
+                }
+                System.out.println("Do you want to join an existing game, create new game or refresh?(join/new/refresh)");
+                inputString = scanner.nextLine();
+                while (!inputString.equals("join") && !inputString.equals("new") && !inputString.equals("refresh")) {
+                    System.out.println("Provide valid input: \"join\" or \"new\" or \"refresh\"");
+                    inputString = scanner.nextLine();
+                }
+                if (inputString.equals("join")) {
+                    answer += "Decision:join-";
+                    System.out.println("Which game do you want to join?");
+                    inputString = scanner.nextLine();
+                    while (!availableGames.contains(inputString)) {
+                        System.out.println("Provide a valid game that is available");
+                        inputString = scanner.nextLine();
+                    }
+                    String chosenGame = "" + inputString.charAt(4);
+                    answer += "Joins:" + chosenGame + "-";
+                } else if (inputString.equals("new")) {
+                    answer += "Decision:new-";
+                }
+                else {
+                    answer += "Decision:refresh-";
+                }
             }
         }
         if(msg.get("State").equals("NEW_GAME")) {

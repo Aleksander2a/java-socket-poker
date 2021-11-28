@@ -412,7 +412,23 @@ public class Game {
     }
 
     public void distributePot() {
-        playersByHand.get(0).updateMoney(pot);
+        int playerInPot = 0;
+        for(Player p : activePlayers) {
+            if(p.getInPot()!=0) {
+                playerInPot++;
+            }
+        }
+        //TODO: DIVIDE THE POT EQUALLY
+        int moneyToDivide = pot;
+        for(int i=0; i<playersByHand.size(); i++) {
+            if(!playersByHand.get(i).getAction().equals(Player.Action.FOLD)) {
+                int playersPot = playersByHand.get(i).getInPot();
+                playersByHand.get(i).updateMoney(Math.min(moneyToDivide, playersPot*playerInPot));
+                moneyToDivide -= Math.min(moneyToDivide, playersPot*playerInPot);
+            }
+        }
+        //
+        //playersByHand.get(0).updateMoney(pot);
         setPot(0);
         for(Player p : players) {
             p.setInPot(0);

@@ -26,12 +26,12 @@ public class Protocol {
                 Server.nextPlayerId++;
                 Server.clients.add(client);
                 //TODO: Add refresh option to see newly created games
-                if(Server.games.isEmpty()) {
-                    state = State.NEW_GAME;
-                }
-                else {
+//                if(Server.games.isEmpty()) {
+//                    state = State.NEW_GAME;
+//                }
+//                else {
                     state = State.JOIN_OR_CREATE_GAME;
-                }
+                //}
                 theOutput = "State:" + state + "-";
                 theOutput += "PlayerID:" + client.getId() + "-";
                 theOutput += "GameNumber:" + Server.games.size() + "-";
