@@ -321,7 +321,7 @@ public class ServerMessageHandler {
                                         + "-GameID:" + msg.get("GameID") + "-GameRound:FIRST_BETTING" + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
                                         + "-" + player.handToString();
-                                game.setRound(Game.Round.COMPARING_CARDS);
+                                //game.setRound(Game.Round.COMPARING_CARDS);
                                 if(playersToCompleteSet == game.activePlayers().size()) {
                                     game.setRound(Game.Round.FIRST_BETTING);
                                     playersToCompleteSet = 0;
