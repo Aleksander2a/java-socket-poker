@@ -188,6 +188,15 @@ public class ServerMessageHandler {
                         }
                         //game.nextTurn();
                         // TODO: Proceed game status
+//                        boolean anteTaken = true;
+//                        for(Player p : game.activePlayers()) {
+//                            if(p.getInPot()==0) {
+//                                anteTaken = false;
+//                            }
+//                        }
+//                        if(!anteTaken) {
+//                            game.takeAnteFromPlayer();
+//                        }
                         game.proceedBettingRound();
                         if(!game.isAllFolded().equals("00")) {
                             game.setRound(Game.Round.FIRST_BETTING);
