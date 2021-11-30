@@ -25,6 +25,45 @@ public class ClientMessageHandler {
         }
     }
 
+    static String handRankEncoder(String handRankInfo) {
+        String result = "";
+        String[] elements = handRankInfo.split(",");
+        Hand.Ranking rank = Hand.Ranking.valueOf(elements[0]);
+        switch (rank) {
+            case HIGH_CARD:
+                result += elements[0] + " of " + elements[1] + " with kicker " + elements[2];
+                break;
+            case ONE_PAIR:
+                result += elements[0] + " of " + elements[1] + "s with kicker " + elements[2];
+                break;
+            case TWO_PAIRS:
+                result += elements[0] + " of " + elements[1] + "s and " + elements[2] +"s";
+                break;
+            case THREE_OF_A_KIND:
+                result += elements[0] + " of " + elements[1] + "s with kicker " + elements[2];
+                break;
+            case STRAIGHT:
+                result += elements[0] + " up to " + elements[1];
+                break;
+            case FLUSH:
+                result += elements[0] + " of " + elements[1] + " with high card " + elements[2];
+                break;
+            case FULL_HOUSE:
+                result += elements[0] + " of three " + elements[1] + "s and two " + elements[2] +"s";
+                break;
+            case FOUR_OF_A_KIND:
+                result += elements[0] + " of " + elements[1] + "s with kicker " + elements[2];
+                break;
+            case STRAIGHT_FLUSH:
+                result += elements[0] + " of " + elements[1] + " with high card " + elements[2];
+                break;
+            case ROYAL_FLUSH:
+                result += elements[0] + " of " + elements[1] + " with high card " + elements[2];
+                break;
+        }
+        return result;
+    }
+
     static String answerToMessage(LinkedHashMap<String, String> msg) {
         Scanner scanner = new Scanner(System.in);
         String answer = "";
@@ -130,7 +169,7 @@ public class ClientMessageHandler {
             ArrayList<Card> playerCards = new ArrayList<>();
             if(msg.containsKey("AllFolded")) {
                 if(!msg.get("AllFolded").equals("00")) {
-                    System.out.println("Player" + msg.get("AllFolded") + " wins the pot, as everyone else folded! Starting new set...");
+                    System.out.println("Player" + msg.get("AllFolded") + " wins the pot of " + msg.get("MainPotWon") + " as everyone else folded! Starting new set...");
                 }
             }
             if(!msg.containsKey("Bankrupt") && !msg.containsKey("Winner")) {
@@ -141,11 +180,15 @@ public class ClientMessageHandler {
                 for (String key : msg.keySet()) {
                     Matcher cardMatcher = cardPattern.matcher(key);
                     if (cardMatcher.find()) {
-                        handToPrint += msg.get(key) + "|";
+                        String[] cardInfo = msg.get(key).split(",");
+                        handToPrint += cardInfo[0] + " " + cardInfo[1] + "|";
                         playerCards.add(new Card(msg.get(key)));
                     }
                 }
                 System.out.println(handToPrint);
+                System.out.println("Your hand is:");
+                System.out.println(handRankEncoder(msg.get("PlayerHandRank")));
+
             }
             if(!gameRound.equals(Game.Round.COMPARING_CARDS) && !msg.get("Turn").equals(msg.get("PlayerID"))) {
                 System.out.println("NOT your turn! Press ENTER to refresh");
@@ -247,13 +290,13 @@ public class ClientMessageHandler {
                     int nrOfCardsToChange = Integer.parseInt(inputString);
                     for(int i=0; i<nrOfCardsToChange; i++) {
                         boolean validCard = false;
-                        System.out.println("What card do you want to change? (Rank Suit)");
+                        System.out.println("What card do you want to change? (RANK SUIT)");
                         inputString = scanner.nextLine();
                         //TODO: Handle invalid input
                         Pattern validCardPattern = Pattern.compile("[A-Za-z] [A-Za-z]");
                         Matcher validMatcher = validCardPattern.matcher(inputString);
                         while(!validMatcher.find()) {
-                            System.out.println("Invalid input. Try again. (Rank Suit)");
+                            System.out.println("Invalid input. Try again. (RANK SUIT)");
                             inputString = scanner.nextLine();
                             validMatcher = validCardPattern.matcher(inputString);
                         }
@@ -270,7 +313,7 @@ public class ClientMessageHandler {
                             //TODO: Handle invalid input
                             validMatcher = validCardPattern.matcher(inputString);
                             while(!validMatcher.find()) {
-                                System.out.println("Invalid input. Try again. (Rank Suit)");
+                                System.out.println("Invalid input. Try again. (RANK SUIT)");
                                 inputString = scanner.nextLine();
                                 validMatcher = validCardPattern.matcher(inputString);
                             }
@@ -386,7 +429,13 @@ public class ClientMessageHandler {
                             }
                             else {
                                 System.out.println("Bye");
-                                System.exit(0);
+                                answer = "Quit";
+//                                answer += "State:JOIN_OR_CREATE_GAME-";
+//                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
+//                                answer += "Decision:quit-";
+                                //System.out.println("Bye");
+                                //System.exit(0);
+                                return answer;
                             }
                         }
                     }
@@ -406,7 +455,13 @@ public class ClientMessageHandler {
                             }
                             else {
                                 System.out.println("Bye");
-                                System.exit(0);
+                                answer = "Quit";
+//                                answer += "State:JOIN_OR_CREATE_GAME-";
+//                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
+//                                answer += "Decision:quit-";
+                                //System.out.println("Bye");
+                                //System.exit(0);
+                                return answer;
                             }
                         }
                     }
@@ -416,7 +471,7 @@ public class ClientMessageHandler {
                         inputString = scanner.nextLine();
                     }
                     else {
-                        System.out.println("Player" + msg.get("PotWinner") + " won the pot!");
+                        System.out.println("Player" + msg.get("PotWinner") + " won the main pot of " + msg.get("MainPotWon") + " with " + handRankEncoder(msg.get("WinnerHand")) + "!");
                         System.out.println("Press ENTER to continue");
                         inputString = scanner.nextLine();
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID") + "-Decision:Seen";

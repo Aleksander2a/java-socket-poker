@@ -239,6 +239,75 @@ public class Hand {
                 '}';
     }
 
+    public String rankingToString() {
+        String result = "";
+        switch (ranking) {
+            case HIGH_CARD:
+                result += ranking + "," + leadingCard.getRank() + "," + kicker.getRank();
+                break;
+            case ONE_PAIR:
+                result += ranking + "," + leadingCard.getRank() + "," + kicker.getRank();
+                break;
+            case TWO_PAIRS:
+                result += ranking + "," + leadingCard.getRank() + "," + kicker.getRank();
+                break;
+            case THREE_OF_A_KIND:
+                result += ranking + "," + leadingCard.getRank() + "," + kicker.getRank();
+                break;
+            case STRAIGHT:
+                result += ranking + "," + leadingCard.getRank();
+                break;
+            case FLUSH:
+                result += ranking + "," + leadingCard.getSuit() + "," + leadingCard.getRank();
+                break;
+            case FULL_HOUSE:
+                result += ranking + "," + leadingCard.getRank() + "," + kicker.getRank();
+                break;
+            case FOUR_OF_A_KIND:
+                result += ranking + "," + leadingCard.getRank() + "," + kicker.getRank();
+                break;
+            case STRAIGHT_FLUSH:
+                result += ranking + "," + leadingCard.getSuit() + "," + leadingCard.getRank();
+                break;
+            case ROYAL_FLUSH:
+                result += ranking + "," + leadingCard.getSuit() + "," + leadingCard.getRank();
+                break;
+        }
+//        switch (ranking) {
+//            case HIGH_CARD:
+//                result += ranking + " of " + leadingCard.getRank() + "with kicker " + kicker.getRank();
+//                break;
+//            case ONE_PAIR:
+//                result += ranking + " of " + leadingCard.getRank() + "s with kicker " + kicker.getRank();
+//                break;
+//            case TWO_PAIRS:
+//                result += ranking + " of " + leadingCard.getRank() + "s and " + kicker.getRank() +"s";
+//                break;
+//            case THREE_OF_A_KIND:
+//                result += ranking + " of " + leadingCard.getRank() + "s with kicker " + kicker.getRank();
+//                break;
+//            case STRAIGHT:
+//                result += ranking + " up to " + leadingCard.getRank();
+//                break;
+//            case FLUSH:
+//                result += ranking + " of " + leadingCard.getSuit() + " with high card " + leadingCard.getRank();
+//                break;
+//            case FULL_HOUSE:
+//                result += ranking + " of three " + leadingCard.getRank() + "s and two " + kicker.getRank() +"s";
+//                break;
+//            case FOUR_OF_A_KIND:
+//                result += ranking + " of " + leadingCard.getRank() + "s with kicker " + kicker.getRank();
+//                break;
+//            case STRAIGHT_FLUSH:
+//                result += ranking + " of " + leadingCard.getSuit() + " with high card " + leadingCard.getRank();
+//                break;
+//            case ROYAL_FLUSH:
+//                result += ranking + " of " + leadingCard.getSuit() + " with high card " + leadingCard.getRank();
+//                break;
+//        }
+        return result;
+    }
+
     public int compareTo(Hand otherHand) {
         if(ranking.ordinal() - otherHand.ranking.ordinal() > 0) {
             return 1;

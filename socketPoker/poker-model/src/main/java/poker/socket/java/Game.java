@@ -31,6 +31,8 @@ public class Game {
     private boolean roundProceeded = false;
     private int playersToProceedRound = 0;
     public boolean anteTaken = false;
+    private String winningHand = "none";
+    private int mainPotWon = 0;
 
     public enum Round {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
@@ -238,6 +240,14 @@ public class Game {
         this.playersToProceedRound += playersToProceedRound;
     }
 
+    public int getMainPotWon() {
+        return mainPotWon;
+    }
+
+    public String getWinningHand() {
+        return winningHand;
+    }
+
     public void addActivePlayer(Player p) {
         if (!activePlayers.contains(p)) {
             activePlayers.add(p);
@@ -365,6 +375,7 @@ public class Game {
                 if(activePlayers.get(i).getAction().equals(Player.Action.BID)) {
                     activePlayers.get(i).updateMoney(pot);
                     allFolded = String.valueOf(activePlayers.get(i).getId());
+                    mainPotWon = pot;
                 }
                 //activePlayers.get(i).setAction(Player.Action.NONE);
                 activePlayers.get(i).setInPot(0);
@@ -462,6 +473,10 @@ public class Game {
             if(!playersByHand.get(i).getAction().equals(Player.Action.FOLD)) {
                 int playersPot = playersByHand.get(i).getInPot();
                 playersByHand.get(i).updateMoney(Math.min(moneyToDivide, playersPot*playerInPot));
+                if(i==0) {
+                    mainPotWon = Math.min(moneyToDivide, playersPot*playerInPot);
+                    winningHand = playersByHand.get(i).getHand().rankingToString();
+                }
                 moneyToDivide -= Math.min(moneyToDivide, playersPot*playerInPot);
             }
         }

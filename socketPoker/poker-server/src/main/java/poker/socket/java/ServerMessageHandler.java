@@ -19,6 +19,7 @@ public class ServerMessageHandler {
         Scanner scanner = new Scanner(System.in);
         String answer = "";
         String playerHand = "";
+        String playerHandRank = "";
         String gameRound= "";
         int playerTurnId = -1;
         int money = 0;
@@ -55,6 +56,7 @@ public class ServerMessageHandler {
                         game.addActivePlayer(p);
                         if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
                             playerHand = p.handToString();
+                            playerHandRank = p.getHand().rankingToString();
                             money = p.getMoney();
                             myBid = p.getBid();
                             action = p.getAction();
@@ -62,7 +64,7 @@ public class ServerMessageHandler {
                     }
                     answer += "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID") + "-GameID:" + game.getId()
                             + "-GameRound:" + gameRound + "-Turn:" + playerTurnId + "-MyMoney:" + money + "-MaxBid:"
-                            + maxBid + "-MyBid:" + myBid + "-MyAction:" + action + "-GameInfo:" + game.gameInfo() + "-" + playerHand;
+                            + maxBid + "-MyBid:" + myBid + "-MyAction:" + action + "-GameInfo:" + game.gameInfo() + "-" + playerHand + "PlayerHandRank:" + playerHandRank;
                 }
                 else {
                     answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
@@ -118,6 +120,7 @@ public class ServerMessageHandler {
                     game.addActivePlayer(p);
                     if(p.getId()==Integer.parseInt(msg.get("PlayerID"))) {
                         playerHand = p.handToString();
+                        playerHandRank = p.getHand().rankingToString();
                         money = p.getMoney();
                         myBid = p.getBid();
                         action = p.getAction();
@@ -126,7 +129,7 @@ public class ServerMessageHandler {
                 answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
                         + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + playerTurnId + "-MyMoney:" + money + "-MaxBid:"
                         + maxBid + "-MyBid:" + myBid + "-MyAction:" + action + "-GameInfo:" + game.gameInfo()
-                        + "-" + playerHand;
+                        + "-" + playerHand + "PlayerHandRank:" + playerHandRank;
             }
             else {
                 answer = "State:WAITING_FOR_PLAYERS-" + "PlayerID:" + msg.get("PlayerID") + "-"
@@ -155,7 +158,7 @@ public class ServerMessageHandler {
                 answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                         + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-AllFolded:" + game.isAllFolded() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                        + "-" + player.handToString();
+                        + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString();
                 return answer;
             }
             else {
@@ -234,7 +237,7 @@ public class ServerMessageHandler {
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                 + "-GameID:" + msg.get("GameID") + "-GameRound:" + game.getRound() + "-AllFolded:" + game.isAllFolded() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                 + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                                + "-" + player.handToString();
+                                + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString() + "-MainPotWon:" + game.getMainPotWon() + "-WinnerHand:" + game.getWinningHand();
                         break;
                     case "CHANGE_CARDS":
                         game.setAllFolded("00");
@@ -282,7 +285,7 @@ public class ServerMessageHandler {
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                 + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                 + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                                + "-" + player.handToString();
+                                + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString();
                         break;
                     case "SECOND_BETTING":
                         player.setCardsChangeCompleted(false);
@@ -341,7 +344,7 @@ public class ServerMessageHandler {
                         answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                 + "-GameID:" + msg.get("GameID") + "-GameRound:" + game.getRound() + "-AllFolded:" + game.isAllFolded() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                 + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                                + "-" + player.handToString();
+                                + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString() + "-MainPotWon:" + game.getMainPotWon() + "-WinnerHand:" + game.getWinningHand();
                         break;
                     case "COMPARING_CARDS":
                         game.setAllFolded("00");
@@ -352,7 +355,7 @@ public class ServerMessageHandler {
                             answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                     + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-PotWinner:" + game.getPotWinner().getId() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                     + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                                    + "-" + player.handToString();
+                                    + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString() + "-MainPotWon:" + game.getMainPotWon() + "-WinnerHand:" + game.getWinningHand();
                         }
                         else {
                             //TODO: proceed after comparing cards (New set or game over)
@@ -413,7 +416,7 @@ public class ServerMessageHandler {
                                 answer = "State:IN_GAME-" + "PlayerID:" + msg.get("PlayerID")
                                         + "-GameID:" + msg.get("GameID") + "-GameRound:FIRST_BETTING" + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                                        + "-" + player.handToString();
+                                        + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString() + "-MainPotWon:" + game.getMainPotWon() + "-WinnerHand:" + game.getWinningHand();
                                 //game.setRound(Game.Round.COMPARING_CARDS);
                                 if(playersToCompleteSet == game.activePlayers().size()) {
                                     game.setRound(Game.Round.FIRST_BETTING);
@@ -425,7 +428,7 @@ public class ServerMessageHandler {
                                 answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                         + "-GameID:" + msg.get("GameID") + "-GameRound:" + gameRound + "-PotWinner:" + game.getPotWinner().getId() + "-Turn:" + game.getPlayerTurn().getId() + "-MyMoney:" + player.getMoney() + "-MaxBid:"
                                         + game.getMaxBid() + "-MyBid:" + player.getBid() + "-MyAction:" + player.getAction() + "-GameInfo:" + game.gameInfo()
-                                        + "-" + player.handToString();
+                                        + "-" + player.handToString() + "PlayerHandRank:" + player.getHand().rankingToString() + "-MainPotWon:" + game.getMainPotWon() + "-WinnerHand:" + game.getWinningHand();
                             }
                         }
                         break;
