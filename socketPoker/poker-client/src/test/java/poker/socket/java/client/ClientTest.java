@@ -1,7 +1,6 @@
-package poker.socket.java;
+package poker.socket.java.client;
 
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -15,6 +14,6 @@ public class ClientTest
     @Test
     public void shouldAnswerWithTrue()
     {
-        assertTrue( true );
+        Assert.assertTrue( true );
     }
 }

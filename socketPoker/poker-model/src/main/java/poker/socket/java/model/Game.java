@@ -1,4 +1,4 @@
-package poker.socket.java;
+package poker.socket.java.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -196,13 +196,13 @@ public class Game {
         this.potWinner = potWinner;
     }
 
-    public Player getWinner() {
-        return potWinner;
-    }
-
-    public void setWinner(Player potWinner) {
-        this.potWinner = potWinner;
-    }
+//    public Player getWinner() {
+//        return potWinner;
+//    }
+//
+//    public void setWinner(Player potWinner) {
+//        this.potWinner = potWinner;
+//    }
 
     public boolean isFinished() {
         return finished;

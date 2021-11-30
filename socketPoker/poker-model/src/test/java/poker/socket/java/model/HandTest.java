@@ -1,15 +1,16 @@
-package poker.socket.java;
+package poker.socket.java.model;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Assert;
 
 public class HandTest {
     private final Player player = new Player();
     private final Deck deck = new Deck();
 
+
     @Test
-    void hasOnePairTrueTest() {
+    public void hasOnePairTrueTest() {
         player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
@@ -24,11 +25,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasOnePair() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasOnePair());
+        Assert.assertTrue(hand.hasOnePair());
     }
 
     @Test
-    void hasOnePairFalseTest() {
+    public void hasOnePairFalseTest() {
         player.addCard(new Card(Card.Rank.SIX, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
@@ -43,11 +44,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasOnePair() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasOnePair());
+        Assert.assertFalse(hand.hasOnePair());
     }
 
     @Test
-    void hasTwoPairsTrueTest() {
+    public void hasTwoPairsTrueTest() {
         player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
@@ -57,11 +58,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasTwoPairs() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasTwoPairs());
+        Assert.assertTrue(hand.hasTwoPairs());
     }
 
     @Test
-    void hasTwoPairsFalseTest() {
+    public void hasTwoPairsFalseTest() {
         player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
@@ -71,11 +72,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasTwoPairs() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasTwoPairs());
+        Assert.assertFalse(hand.hasTwoPairs());
     }
 
     @Test
-    void hasThreeOfAKindTrueTest() {
+    public void hasThreeOfAKindTrueTest() {
         player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.CLUBS));
@@ -85,11 +86,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasThreeOfAKind() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasThreeOfAKind());
+        Assert.assertTrue(hand.hasThreeOfAKind());
     }
 
     @Test
-    void hasThreeOfAKindFalseTest() {
+    public void hasThreeOfAKindFalseTest() {
         player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.EIGHT, Card.Suit.CLUBS));
@@ -99,11 +100,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasThreeOfAKind() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasThreeOfAKind());
+        Assert.assertFalse(hand.hasThreeOfAKind());
     }
 
     @Test
-    void hasStraightTrueTest() {
+    public void hasStraightTrueTest() {
         player.addCard(new Card(Card.Rank.SIX, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.CLUBS));
@@ -113,11 +114,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasStraight() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasStraight());
+        Assert.assertTrue(hand.hasStraight());
     }
 
     @Test
-    void hasStraightTrueWithAceTest() {
+    public void hasStraightTrueWithAceTest() {
         player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.CLUBS));
@@ -127,11 +128,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasStraight() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasStraight());
+        Assert.assertTrue(hand.hasStraight());
     }
 
     @Test
-    void hasStraightFalseTest() {
+    public void hasStraightFalseTest() {
         player.addCard(new Card(Card.Rank.QUEEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.CLUBS));
@@ -141,11 +142,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasStraight() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasStraight());
+        Assert.assertFalse(hand.hasStraight());
     }
 
     @Test
-    void hasFlushTrueTest() {
+    public void hasFlushTrueTest() {
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
@@ -155,11 +156,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasFlush());
+        Assert.assertTrue(hand.hasFlush());
     }
 
     @Test
-    void hasFlushFalseTest() {
+    public void hasFlushFalseTest() {
         player.addCard(new Card(Card.Rank.QUEEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.KING, Card.Suit.CLUBS));
@@ -169,11 +170,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasFlush());
+        Assert.assertFalse(hand.hasFlush());
     }
 
     @Test
-    void hasFullHouseTrueTest() {
+    public void hasFullHouseTrueTest() {
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
@@ -183,11 +184,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasFullHouse() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasFullHouse());
+        Assert.assertTrue(hand.hasFullHouse());
     }
 
     @Test
-    void hasFullHouseFalseTest() {
+    public void hasFullHouseFalseTest() {
         player.addCard(new Card(Card.Rank.NINE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
@@ -197,11 +198,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasFullHouse() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasFullHouse());
+        Assert.assertFalse(hand.hasFullHouse());
     }
 
     @Test
-    void hasFourOfAKindTrueTest() {
+    public void hasFourOfAKindTrueTest() {
         player.addCard(new Card(Card.Rank.TEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TEN, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.TEN, Card.Suit.CLUBS));
@@ -211,11 +212,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasFourOfAKind() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasFourOfAKind());
+        Assert.assertTrue(hand.hasFourOfAKind());
     }
 
     @Test
-    void hasFourOfAKindFalseTest() {
+    public void hasFourOfAKindFalseTest() {
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.CLUBS));
@@ -225,11 +226,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasFourOfAKind() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasFourOfAKind());
+        Assert.assertFalse(hand.hasFourOfAKind());
     }
 
     @Test
-    void hasStraightFlushTrueTest() {
+    public void hasStraightFlushTrueTest() {
         player.addCard(new Card(Card.Rank.SIX, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.THREE, Card.Suit.HEARTS));
@@ -239,11 +240,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasStraightFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasStraightFlush());
+        Assert.assertTrue(hand.hasStraightFlush());
     }
 
     @Test
-    void hasStraightFlushFalseTest() {
+    public void hasStraightFlushFalseTest() {
         player.addCard(new Card(Card.Rank.NINE, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.NINE, Card.Suit.CLUBS));
@@ -253,11 +254,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasStraightFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasStraightFlush());
+        Assert.assertFalse(hand.hasStraightFlush());
     }
 
     @Test
-    void hasRoyalFlushTrueTest() {
+    public void hasRoyalFlushTrueTest() {
         player.addCard(new Card(Card.Rank.TEN, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.QUEEN, Card.Suit.HEARTS));
@@ -267,11 +268,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasRoyalFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertTrue(hand.hasRoyalFlush());
+        Assert.assertTrue(hand.hasRoyalFlush());
     }
 
     @Test
-    void hasRoyalFlushFalseTest() {
+    public void hasRoyalFlushFalseTest() {
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.HEARTS));
         player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.CLUBS));
@@ -281,11 +282,11 @@ public class HandTest {
         player.printCards();
         Hand hand = player.getHand();
         System.out.println(hand.hasRoyalFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
-        assertFalse(hand.hasRoyalFlush());
+        Assert.assertFalse(hand.hasRoyalFlush());
     }
 
     @Test
-    void hasHandTest() {
+    public void hasHandTest() {
         for(int i=0; i<5; i++) {
             Card card = deck.dealCard();
             player.addCard(card);
@@ -293,11 +294,11 @@ public class HandTest {
         player.setHand();
         player.printCards();
         System.out.println(player.getHand().toString());
-        assertTrue(true);
+        Assert.assertTrue(true);
     }
 
     @Test
-    void compareToTest() {
+    public void compareToTest() {
         System.out.println("Player ----------------------");
         for(int i=0; i<5; i++) {
             Card card = deck.dealCard();
@@ -319,6 +320,6 @@ public class HandTest {
 
         System.out.println("Compare Player to Player1 ----------------------");
         System.out.println(player.getHand().compareTo(player1.getHand()));
-        assertTrue(true);
+        Assert.assertTrue(true);
     }
 }

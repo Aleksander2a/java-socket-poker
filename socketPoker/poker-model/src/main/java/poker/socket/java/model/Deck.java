@@ -1,4 +1,4 @@
-package poker.socket.java;
+package poker.socket.java.model;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -8,6 +8,7 @@ import java.util.Random;
  */
 public class Deck {
     private ArrayList<Card> cards = new ArrayList<>();
+    private Random rand = new Random();
 
     /**
      * Initialises Deck with all possible cards (52 cards)
@@ -25,7 +26,6 @@ public class Deck {
      */
     public Card dealCard() {
         // create instance of Random class
-        Random rand = new Random();
         // Generate random integers in range 0 to cards.size()
         int index = rand.nextInt(cards.size());
         Card cardToReturn = cards.get(index);

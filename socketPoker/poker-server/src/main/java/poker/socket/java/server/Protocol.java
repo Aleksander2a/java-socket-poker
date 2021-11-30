@@ -1,10 +1,8 @@
-package poker.socket.java;
+package poker.socket.java.server;
 
-import java.net.*;
-import java.io.*;
-import java.util.ArrayList;
+import poker.socket.java.model.*;
+
 import java.util.LinkedHashMap;
-import java.util.Objects;
 
 public class Protocol {
 

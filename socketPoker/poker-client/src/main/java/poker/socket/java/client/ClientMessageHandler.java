@@ -1,4 +1,6 @@
-package poker.socket.java;
+package poker.socket.java.client;
+
+import poker.socket.java.model.*;
 
 import java.sql.SQLOutput;
 import java.util.*;

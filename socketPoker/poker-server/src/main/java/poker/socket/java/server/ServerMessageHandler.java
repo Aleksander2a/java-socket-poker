@@ -1,5 +1,6 @@
-package poker.socket.java;
+package poker.socket.java.server;
 
+import poker.socket.java.model.*;
 import java.util.*;
 
 public class ServerMessageHandler {
@@ -376,7 +377,7 @@ public class ServerMessageHandler {
                                 game.setSetProceeded(true);
                             }
                             if(game.activePlayers().size() == 1) {
-                                if(game.getWinner().getId()==Integer.parseInt(msg.get("PlayerID"))) {
+                                if(game.getPotWinner().getId()==Integer.parseInt(msg.get("PlayerID"))) {
                                     answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID")
                                             + "-GameRound:COMPARING_CARDS" + "-Winner:Yes";
                                 }

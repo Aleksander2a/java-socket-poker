@@ -1,9 +1,8 @@
-package poker.socket.java;
+package poker.socket.java.client;
 
 import java.io.*;
 import java.net.*;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * The main class on the Client-side of the app.

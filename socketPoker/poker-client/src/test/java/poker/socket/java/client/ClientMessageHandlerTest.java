@@ -1,17 +1,16 @@
-package poker.socket.java;
+package poker.socket.java.client;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.*;
 
 public class ClientMessageHandlerTest {
     @Test
-    void encodeTest() {
+    public void encodeTest() {
         String s = "State:ENTERED-PlayerID:0-";
         LinkedHashMap<String, String> result = ClientMessageHandler.encode(s);
         System.out.println(result);
-        assertTrue(true);
+        Assert.assertTrue(true);
     }
 }

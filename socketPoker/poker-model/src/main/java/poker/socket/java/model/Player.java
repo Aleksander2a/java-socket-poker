@@ -1,4 +1,4 @@
-package poker.socket.java;
+package poker.socket.java.model;
 
 import java.util.ArrayList;
 import java.util.Collections;

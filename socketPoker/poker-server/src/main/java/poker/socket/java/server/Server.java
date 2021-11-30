@@ -1,4 +1,6 @@
-package poker.socket.java;
+package poker.socket.java.server;
+
+import poker.socket.java.model.*;
 
 import java.io.*;
 import java.net.*;

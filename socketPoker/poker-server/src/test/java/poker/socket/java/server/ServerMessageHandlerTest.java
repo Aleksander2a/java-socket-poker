@@ -1,20 +1,18 @@
-package poker.socket.java;
+package poker.socket.java.server;
 
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Unit test for simple Server.
  */
-public class ServerThreadTest
-{
+public class ServerMessageHandlerTest {
     /**
      * Rigorous Test :-)
      */
     @Test
     public void shouldAnswerWithTrue()
     {
-        assertTrue( true );
+        Assert.assertTrue( true );
     }
 }

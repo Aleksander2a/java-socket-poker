@@ -1,4 +1,4 @@
-package poker.socket.java;
+package poker.socket.java.common;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
