@@ -16,11 +16,6 @@ public class HandTest {
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.FIVE, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
-
-//        for(int i=0; i<5; i++) {
-//            Card card = deck.dealCard();
-//            player.addCard(card);
-//        }
         player.setHand();
         player.printCards();
         Hand hand = player.getHand();
@@ -35,11 +30,6 @@ public class HandTest {
         player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
         player.addCard(new Card(Card.Rank.TWO, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
-
-//        for(int i=0; i<5; i++) {
-//            Card card = deck.dealCard();
-//            player.addCard(card);
-//        }
         player.setHand();
         player.printCards();
         Hand hand = player.getHand();
@@ -284,63 +274,6 @@ public class HandTest {
         Hand hand = player.getHand();
         System.out.println(hand.hasRoyalFlush() + "|" + hand.getRanking() + "|" + hand.getLeadingCard().toString() + "|" + hand.getKicker().toString());
         Assert.assertFalse(hand.hasRoyalFlush());
-    }
-
-    @Test
-    public void handToStringHighCardTest() {
-        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
-        player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.NINE, Card.Suit.DIAMONDS));
-        player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
-        player.setHand();
-        String result = player.getHand().rankingToString();
-        Assert.assertEquals("HIGH_CARD,ACE,JACK", result);
-    }
-
-    @Test
-    public void handToStringOnePairTest() {
-        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
-        player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ACE, Card.Suit.DIAMONDS));
-        player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
-        player.setHand();
-        String result = player.getHand().rankingToString();
-        Assert.assertEquals("ONE_PAIR,ACE,JACK", result);
-    }
-
-    @Test
-    public void handToStringTwoPairsTest() {
-        player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.HEARTS));
-        player.addCard(new Card(Card.Rank.JACK, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.ACE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.SEVEN, Card.Suit.DIAMONDS));
-        player.addCard(new Card(Card.Rank.JACK, Card.Suit.HEARTS));
-        player.setHand();
-        player.printCards();
-        Hand hand = player.getHand();
-        hand.hasHand();
-        //Assert.assertTrue(hand.hasTwoPairs());
-        //player.printCards();
-        //System.out.println(hand.getRanking());
-        String result = player.getHand().rankingToString();
-        //System.out.println(result);
-        Assert.assertEquals("TWO_PAIRS,JACK,SEVEN", result);
-    }
-
-    @Test
-    public void handToStringThreeOfAKindTest() {
-        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.HEARTS));
-        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.SPADES));
-        player.addCard(new Card(Card.Rank.FIVE, Card.Suit.CLUBS));
-        player.addCard(new Card(Card.Rank.ACE, Card.Suit.DIAMONDS));
-        player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
-        player.setHand();
-        String result = player.getHand().rankingToString();
-        player.getHand().hasThreeOfAKind();
-        player.printCards();
-        Assert.assertEquals("THREE_OF_A_KIND,FIVE,ACE", result);
     }
 
     @Test

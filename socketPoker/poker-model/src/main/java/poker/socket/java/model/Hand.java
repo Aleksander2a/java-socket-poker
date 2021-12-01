@@ -53,7 +53,6 @@ public class Hand {
     }
 
     public boolean hasTwoPairs() {
-        boolean toReturn = false;
         int countOfPairs = 0;
         Card pairOne = null;
         Card pairTwo = null;

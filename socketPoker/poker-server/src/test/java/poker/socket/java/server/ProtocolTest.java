@@ -10,9 +10,8 @@ public class ProtocolTest {
     /**
      * Rigorous Test :-)
      */
-//    @Test
-//    public void processInputTest1() {
-//
-//        Assert.assertTrue( true );
-//    }
+    @Test
+    public void protocolTest() {
+        Assert.assertTrue( true );
+    }
 }

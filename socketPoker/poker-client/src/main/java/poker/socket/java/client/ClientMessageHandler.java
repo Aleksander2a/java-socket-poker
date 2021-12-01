@@ -219,8 +219,7 @@ public class ClientMessageHandler {
                     }
                 }
                 LOGGER.info(handToPrint.toString());
-                LOGGER.info("Your hand is:");
-                LOGGER.info(handRankEncoder(msg.get("PlayerHandRank")));
+                // print client hand
 
             }
             if(!gameRound.equals(Game.Round.COMPARING_CARDS) && !msg.get("Turn").equals(msg.get(PLAYER_ID))) {
@@ -473,7 +472,7 @@ public class ClientMessageHandler {
                         scanner.nextLine();
                     }
                     else {
-                        LOGGER.info("Player" + msg.get("PotWinner") + " won the main pot with " + handRankEncoder(msg.get("WinnerHand")) + "!");
+                        LOGGER.info("Player" + msg.get("PotWinner") + " won the main pot!");
                         LOGGER.info("Press ENTER to continue");
                         scanner.nextLine();
                         answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID) + "-Decision:Seen");

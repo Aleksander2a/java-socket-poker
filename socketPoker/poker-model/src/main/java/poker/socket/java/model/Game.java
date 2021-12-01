@@ -36,7 +36,10 @@ public class Game {
         FIRST_BETTING, CHANGE_CARDS, SECOND_BETTING, COMPARING_CARDS, SET_OVER, GAME_OVER
     }
 
-    public Game() {}
+
+    public Game() {
+        // constructor
+    }
 
     public void setId(int gameId) {this.id = gameId;}
 

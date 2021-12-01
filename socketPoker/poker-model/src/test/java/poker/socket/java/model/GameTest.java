@@ -79,7 +79,7 @@ public class GameTest {
         game.addActivePlayer(player0);
         game.addActivePlayer(player1);
         game.addActivePlayer(player1);
-        Assert.assertEquals(game.activePlayers().size(), 2);
+        Assert.assertEquals(2, game.activePlayers().size());
     }
 
     @Test

@@ -41,7 +41,7 @@ public class PlayerTest {
         player.addCard(new Card(Card.Rank.FIVE, Card.Suit.DIAMONDS));
         player.addCard(new Card(Card.Rank.FOUR, Card.Suit.HEARTS));
         player.setHand();
-        Assert.assertEquals(player.getCards().get(0).getRank(), Card.Rank.FOUR);
+        Assert.assertEquals(Card.Rank.FOUR, player.getCards().get(0).getRank());
     }
 
     @Test
