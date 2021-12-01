@@ -8,7 +8,8 @@ import java.net.*;
 import java.util.LinkedHashMap;
 
 /**
- * The main class on the Client-side of the app.
+ * Client class with main() function.
+ * One instance of this class is created for each player connected to the server.
  *
  */
 public class Client
@@ -16,6 +17,11 @@ public class Client
 
     private static final Logger LOGGER = Logger.getLogger( Client.class.getName() );
 
+    /**
+     * Makes a connection with the server
+     * @param args HostName and PortNumber
+     * @throws IOException
+     */
     public static void main( String[] args ) throws IOException
     {
         PropertyConfigurator.configure("D:\\Studia AGH\\Programowanie zaawansowane 1\\Zadanie-1\\socketPoker\\poker-client\\src\\main\\resources\\log4j.properties");

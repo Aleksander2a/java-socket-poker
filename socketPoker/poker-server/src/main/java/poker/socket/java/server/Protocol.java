@@ -4,6 +4,10 @@ import poker.socket.java.model.*;
 
 import java.util.LinkedHashMap;
 
+/**
+ * A class to determine what actions should the server take in each phase of game
+ * or when client joins
+ */
 public class Protocol {
 
     private static  final String STATE_STRING = "State";
@@ -22,6 +26,12 @@ public class Protocol {
         this.state = state;
     }
 
+    /**
+     * Processes message from client, encodes it, acts accordingly and send answer
+     * back to the client
+     * @param theInput Message from client
+     * @return Message to client
+     */
     public String processInput(String theInput) {
         StringBuilder theOutput = new StringBuilder();
         LinkedHashMap<String, String> encodedFromClient;

@@ -80,6 +80,6 @@ at the beginning.
 The communication is based on key:value pairs, separated by ``-``.
 Example:
 ```State:IN_GAME-Round:FIRST_BETTING-PlayerID:0-GameID:0```
-Both client and server have dedicated classes (ClientMassageHandler and ServerMassageHandler)
+Both client and server have dedicated classes (ClientMessageHandler and ServerMessageHandler)
 to encode this type of message to communicate with user in a more 'friendly' way and act 
 accordingly to user input and current game phase.

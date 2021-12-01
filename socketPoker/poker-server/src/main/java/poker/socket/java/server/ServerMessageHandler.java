@@ -3,6 +3,11 @@ package poker.socket.java.server;
 import poker.socket.java.model.*;
 import java.util.*;
 
+/**
+ * Helper class for Server.
+ * Provides methods to deal with messages from client, act accordingly
+ * and send answer back to the client.
+ */
 public class ServerMessageHandler {
     private static final String STATE = "State";
     private static final String DECISION = "Decision";
@@ -30,6 +35,13 @@ public class ServerMessageHandler {
 
     private ServerMessageHandler() {}
 
+    /**
+     * Method to transform message form client into a LinkedHashMap, so the
+     * keys and their values are easily accessible
+     * @param input raw message from client
+     * @return LinkedHashMap of key:value pairs containing specific info needed by server
+     * to execute clients commands
+     */
     static LinkedHashMap<String, String> encode(String input) {
         String[] elements = input.split("-");
         List<String> list = Arrays.asList(elements);
@@ -42,6 +54,14 @@ public class ServerMessageHandler {
         return result;
     }
 
+    /**
+     * Method that acts accordingly to game phase, interpreting message form
+     * client and executes appropriate commands.
+     * @param msg LinkedHashMap containing key:value pairs with easily accessible
+     *            info about the game and the player.
+     * @return Game info, coded in a way that can be sent and the client
+     * wil be able to encode
+     */
     static String answerToMessage(LinkedHashMap<String, String> msg) {
         StringBuilder answer = new StringBuilder();
         String playerHand = "";

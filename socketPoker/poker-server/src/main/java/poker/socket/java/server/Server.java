@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Server class with main() function.
+ * Contains all the games and players connected.
+ */
 public class Server {
     private static int nextPlayerId = 0;
     private static int nextGameId = 0;
@@ -41,6 +45,11 @@ public class Server {
         nextGameId++;
     }
 
+    /**
+     * Opens connection and begins to wait for clients to join
+     * @param args PortNumber
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException
     {
         InetAddress host = InetAddress.getLocalHost();

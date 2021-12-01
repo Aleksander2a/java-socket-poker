@@ -193,6 +193,9 @@ public class Game {
         return dealer;
     }
 
+    /**
+     * Takes ante form every player in the game
+     */
     public void takeAnteFromPlayer() {
         pot = 0;
         for(Player p : players) {
@@ -209,6 +212,9 @@ public class Game {
         }
     }
 
+    /**
+     * Deals 5 cards to every player in the game
+     */
     public void dealCardsToActivePlayers() {
         for(Player p : activePlayers) {
             for(int i=0; i<5; i++) {
@@ -218,6 +224,11 @@ public class Game {
         }
     }
 
+    /**
+     * Saves info about the game to a String, in a format that can be encode later in the
+     * program
+     * @return Game info coded into a String
+     */
     public String gameInfo() {
         StringBuilder info = new StringBuilder();
         info.append("Round=").append(round).append("|Pot=").append(pot).append(",");
@@ -238,12 +249,19 @@ public class Game {
         return info.toString();
     }
 
+    /**
+     * Adds a player to active player if he is not already there
+     * @param p Player
+     */
     public void addActivePlayer(Player p) {
         if (!activePlayers.contains(p)) {
             activePlayers.add(p);
         }
     }
 
+    /**
+     * Updates pot, summing every player's inPot property
+     */
     public void updatePot() {
         pot = 0;
         for(Player p : players) {
@@ -251,12 +269,19 @@ public class Game {
         }
     }
 
+    /**
+     * Gives money to players at the beginning of the game
+     */
     public void giveMoneyToPlayers() {
         for(Player p : players) {
             p.setMoney(startingMoney);
         }
     }
 
+    /**
+     * Initializes the game, giving money to players and taking ante from
+     * them. Deals everyone 5 cards.
+     */
     public void initializeGame() {
         if(!initialized) {
             setDealer(players.get(0));
@@ -279,6 +304,9 @@ public class Game {
         }
     }
 
+    /**
+     * Changes game's round when proceeding to next one
+     */
     public void nextPhase() {
         switch (round){
             case FIRST_BETTING:
@@ -295,6 +323,12 @@ public class Game {
         }
     }
 
+    /**
+     * Takes care of both first and second betting rounds.
+     * Makes sure everyone has had his turn, proceeds when players' bets are
+     * equal or starts over from first betting round when only one player is
+     * left not folding
+     */
     public void proceedBettingRound() {
         int biddingPlayersCount = 0;
         for(Player p : activePlayers) {
@@ -368,6 +402,9 @@ public class Game {
         }
     }
 
+    /**
+     * Responsible for changing the dealer and turn
+     */
     private void findNextDealerAndTurn() {
         int index = 0;
         for(int i=0; i<activePlayers.size(); i++) {
@@ -394,6 +431,10 @@ public class Game {
         }
     }
 
+    /**
+     * When proceeding to next round, starts turn with the first
+     * player on the right side of the dealer
+     */
     public void resetTurnOnNewPhase() {
         int index = 0;
         boolean newTurnFound = false;
@@ -412,6 +453,10 @@ public class Game {
         }
     }
 
+    /**
+     * Helper class to sort players by their hand power, so the winner can
+     * be evaluated
+     */
     static class SortPlayersByHand implements Comparator<Player> {
         @Override
         public int compare(Player o1, Player o2) {
@@ -419,11 +464,18 @@ public class Game {
         }
     }
 
+    /**
+     * Sorts players by their hand power, so the winner can
+     * be evaluated
+     */
     public void comparePlayersCards() {
         playersByHand = activePlayers;
         playersByHand.sort(new SortPlayersByHand());
     }
 
+    /**
+     * Distributes pot to the winner
+     */
     public void distributePot() {
         int playerInPot = 0;
         for(Player p : activePlayers) {
@@ -451,6 +503,10 @@ public class Game {
         potWinner = playersByHand.get(0);
     }
 
+    /**
+     * Proceeds after set is over. Starting new set or ending game where
+     * there is only one player left
+     */
     public void proceedAfterComparingCards() {
         activePlayers.clear();
         for(int i=0; i<players.size(); i++) {

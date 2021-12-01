@@ -151,10 +151,16 @@ public class Player {
         }
     }
 
+    /**
+     * Sorts cards by their rank
+     */
     public void sortCards() {
         cards.sort(new SortByRankSuit());
     }
 
+    /**
+     * Helper class to sort cards by their rank
+     */
     static class SortByRankSuit implements Comparator<Card> {
         @Override
         public int compare(Card o1, Card o2) {
@@ -170,12 +176,19 @@ public class Player {
         }
     }
 
+    /**
+     * Find player's best hand
+     */
     public void setHand() {
         sortCards();
         hand = new Hand(cards);
         hand.hasHand();
     }
 
+    /**
+     * Codes player's hand to String, so it can be easily printed out
+     * @return Player's hand coded into a String
+     */
     public String handToString() {
         StringBuilder result = new StringBuilder();
         for(int i=0; i<5; i++) {
@@ -185,6 +198,11 @@ public class Player {
         return result.toString();
     }
 
+    /**
+     * Pops from player's cards a card given as a String from
+     * @param s Card given as a String
+     * @return Card given as a String (no longer in player's cards)
+     */
     public Card removeCard(String s) {
         String[] cardInString = s.split(",");
         Card toReturn = null;

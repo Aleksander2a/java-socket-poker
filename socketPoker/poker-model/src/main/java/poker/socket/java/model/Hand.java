@@ -2,6 +2,9 @@ package poker.socket.java.model;
 
 import java.util.*;
 
+/**
+ * Class to represent value of player's cards
+ */
 public class Hand {
     private Ranking ranking;
     private Card leadingCard;
@@ -13,6 +16,10 @@ public class Hand {
         FOUR_OF_A_KIND, STRAIGHT_FLUSH, ROYAL_FLUSH
     }
 
+    /**
+     * Initializes hand with given player's cards
+     * @param cards Player's cards
+     */
     public Hand(List<Card> cards) {
         playerCards = cards;
         ranking = Ranking.HIGH_CARD;
@@ -32,6 +39,10 @@ public class Hand {
         return kicker;
     }
 
+    /**
+     * Checks if there is one pair (if so, sets the leading card and a kicker).
+     * @return True if there is a pair and false otherwise
+     */
     public boolean hasOnePair() {
         boolean toReturn = false;
         for(int i=0; i<5; i++) {
@@ -52,6 +63,10 @@ public class Hand {
         return toReturn;
     }
 
+    /**
+     * Checks if there are two pairs (if so, sets the leading card and a kicker).
+     * @return True if there are two pairs and false otherwise
+     */
     public boolean hasTwoPairs() {
         int countOfPairs = 0;
         Card pairOne = null;
@@ -84,6 +99,10 @@ public class Hand {
         return pairTwo != null;
     }
 
+    /**
+     * Checks if there is three of a kind (if so, sets the leading card and a kicker).
+     * @return True if there is three of a kind and false otherwise
+     */
     public boolean hasThreeOfAKind() {
         boolean toReturn = false;
         int countOfCard = 1;
@@ -109,6 +128,10 @@ public class Hand {
         return toReturn;
     }
 
+    /**
+     * Checks if there is a straight (if so, sets the leading card and a kicker).
+     * @return True if there is a straight and false otherwise
+     */
     public boolean hasStraight() {
         boolean toReturn = true;
         // Except case with ACE
@@ -135,6 +158,10 @@ public class Hand {
         return toReturn;
     }
 
+    /**
+     * Checks if there is a flush (if so, sets the leading card and a kicker).
+     * @return True if there is a flush and false otherwise
+     */
     public boolean hasFlush() {
         Card.Suit color = playerCards.get(0).getSuit();
         for(int i=1; i<5; i++) {
@@ -148,6 +175,10 @@ public class Hand {
         return true;
     }
 
+    /**
+     * Checks if there is a full house (if so, sets the leading card and a kicker).
+     * @return True if there is a full house and false otherwise
+     */
     boolean hasFullHouse() {
         if(hasOnePair()) {
             Card pair = leadingCard;
@@ -159,8 +190,11 @@ public class Hand {
         }
         return false;
     }
-    ////
 
+    /**
+     * Checks if there is a four of a kind (if so, sets the leading card and a kicker).
+     * @return True if there is a four of a kind and false otherwise
+     */
     boolean hasFourOfAKind() {
         Card first = playerCards.get(0);
         int firstCount = 1;
@@ -192,6 +226,10 @@ public class Hand {
         return true;
     }
 
+    /**
+     * Checks if there is a straight flush (if so, sets the leading card and a kicker).
+     * @return True if there is a straight flush and false otherwise
+     */
     boolean hasStraightFlush() {
         if(hasFlush() && hasStraight()) {
             ranking = Ranking.STRAIGHT_FLUSH;
@@ -202,6 +240,10 @@ public class Hand {
         return false;
     }
 
+    /**
+     * Checks if there is a royal flush (if so, sets the leading card and a kicker).
+     * @return True if there is a royal flush and false otherwise
+     */
     boolean hasRoyalFlush() {
         if(hasStraightFlush() && playerCards.get(4).getRank() == Card.Rank.ACE) {
             ranking = Ranking.ROYAL_FLUSH;

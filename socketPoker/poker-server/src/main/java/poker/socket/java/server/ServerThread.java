@@ -3,6 +3,10 @@ package poker.socket.java.server;
 import java.net.*;
 import java.io.*;
 
+/**
+ * A thread created for each client that connects to the server,
+ * so they can communicate simultaneously
+ */
 public class ServerThread extends Thread{
     private Socket socket = null;
 
