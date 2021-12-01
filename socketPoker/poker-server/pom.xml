@@ -13,7 +13,6 @@
   <artifactId>poker-server</artifactId>
 
   <name>poker-server</name>
-  <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
   <properties>
@@ -56,7 +55,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>poker.socket.java.Server</mainClass>
+              <mainClass>poker.socket.java.server.Server</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -77,6 +76,26 @@
           <execution>
             <id>default-jar</id>
             <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.7</version>
+        <executions>
+          <execution>
+            <id>jacoco-initialize</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jacoco-site</id>
+            <phase>package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
