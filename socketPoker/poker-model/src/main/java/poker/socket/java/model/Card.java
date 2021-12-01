@@ -93,22 +93,5 @@ public class Card
                 "rank=" + rank +
                 ", suit=" + suit +
                 '}';
-//        String result = this.rank.toString();
-//        result += ' ';
-//        switch (this.suit) {
-//            case CLUBS:
-//                result += (char)'\u2663';
-//                return result;
-//            case DIAMONDS:
-//                result += (char)'\u2666';
-//                return result;
-//            case HEARTS:
-//                result += (char)'\u2665';
-//                return result;
-//            case SPADES:
-//                result += (char)'\u2660';
-//                return result;
-//        }
-//        return "";
     }
 }

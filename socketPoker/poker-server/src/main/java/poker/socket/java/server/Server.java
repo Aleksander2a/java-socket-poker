@@ -5,21 +5,50 @@ import poker.socket.java.model.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
-    public static int nextPlayerId = 0;
-    public static int nextGameId = 0;
-    public static ArrayList<Game> games = new ArrayList<>();
-    public static ArrayList<Player> clients = new ArrayList<>();
+    private static int nextPlayerId = 0;
+    private static int nextGameId = 0;
+    private static List<Game> games = new ArrayList<>();
+    private static List<Player> clients = new ArrayList<>();
+
+    private static final Logger LOGGER = Logger.getLogger( Server.class.getName() );
+
+    public static List<Player> getClients() {
+        return clients;
+    }
+
+    public static List<Game> getGames() {
+        return games;
+    }
+
+    public static int getNextGameId() {
+        return nextGameId;
+    }
+
+    public static int getNextPlayerId() {
+        return nextPlayerId;
+    }
+
+    public static void increaseNextPlayerId() {
+        nextPlayerId++;
+    }
+
+    public static void increaseNextGameId() {
+        nextGameId++;
+    }
 
     public static void main(String[] args) throws IOException
     {
         InetAddress host = InetAddress.getLocalHost();
         String hostName = host.getHostName();
-        System.out.println( "Server " + hostName + " welcomes You!" );
+        LOGGER.log( Level.INFO,"Welcome to server: {0}", hostName);
 
         if (args.length != 1) {
-            System.err.println("Usage: java -jar poker-server-1.0-jar-with-dependencies <port number>");
+            LOGGER.info("Usage: java -jar poker-server-1.0-jar-with-dependencies <port number>");
             System.exit(1);
         }
 
@@ -31,7 +60,7 @@ public class Server {
                 new ServerThread(serverSocket.accept()).start();
             }
         } catch (IOException e) {
-            System.err.println("Could not listen on port " + portNumber);
+            LOGGER.info("Could not listen on port " + portNumber);
             System.exit(-1);
         }
     }

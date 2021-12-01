@@ -1,9 +1,9 @@
 package poker.socket.java.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Random;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * A class to represent a player in the game
@@ -12,17 +12,19 @@ public class Player {
     private int id;
     private int money;
     private int inPot;
-    private int Bid;
+    private int bid;
     private boolean active;
     private Action action;
-    private ArrayList<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
     private int currentGameId;
     private Hand hand;
     private boolean cardsChangeCompleted = false;
     private boolean setCompleted = false;
 
+    private static final Logger LOGGER = Logger.getLogger( Player.class.getName() );
+
     public enum Action {
-        NONE, CHECK, FOLD, BID
+        NONE, FOLD, BID
     }
 
     public Player() {}
@@ -39,8 +41,6 @@ public class Player {
     public int getId() {
         return id;
     }
-
-    public int getCurrentGameId() {return currentGameId;}
 
     public void setCurrentGameId(int gameId) {this.currentGameId = gameId;}
 
@@ -69,15 +69,11 @@ public class Player {
     }
 
     public int getBid() {
-        return Bid;
+        return bid;
     }
 
     public void setBid(int inBid) {
-        this.Bid = inBid;
-    }
-
-    public void updateBid(int value) {
-        this.Bid += value;
+        this.bid = inBid;
     }
 
     public boolean isCardsChangeCompleted() {
@@ -88,6 +84,10 @@ public class Player {
         this.cardsChangeCompleted = cardsChangeCompleted;
     }
 
+    public List<Card> getCards() {
+        return cards;
+    }
+
     public boolean isSetCompleted() {
         return setCompleted;
     }
@@ -96,8 +96,24 @@ public class Player {
         this.setCompleted = setCompleted;
     }
 
-    public ArrayList<Card> getCards() {
-        return cards;
+    public Hand getHand() {
+        return hand;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
     }
 
     /**
@@ -128,8 +144,10 @@ public class Player {
      * Prints out all player's cards
      */
     public void printCards() {
+        String s = "";
         for(Card card : cards) {
-            System.out.println(card.toString());
+            s = card.toString();
+            LOGGER.info(s);
         }
     }
 
@@ -158,34 +176,13 @@ public class Player {
         hand.hasHand();
     }
 
-    public Hand getHand() {
-        return hand;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
-    public void setAction(Action action) {
-        this.action = action;
-    }
-
     public String handToString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for(int i=0; i<5; i++) {
-            result += "Card" + i + ":" + cards.get(i).getRank() + "," +
-                    cards.get(i).getSuit() + "-";
+            result.append("Card").append(i).append(":").append(cards.get(i).getRank()).append(",").append(cards.get(i).getSuit()).append("-");
         }
 
-        return result;
+        return result.toString();
     }
 
     public Card removeCard(String s) {

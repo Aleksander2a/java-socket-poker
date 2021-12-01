@@ -2,8 +2,7 @@ package poker.socket.java.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.List;
 
 /**
  * A class to represent a single game on the server
@@ -11,26 +10,25 @@ import java.util.ListIterator;
 public class Game {
     private int id;
     private int ante;
-    private int pot;
-    private int maxBid;
     private int maxPlayersNumber;
     private int startingMoney;
-    public Deck deck = new Deck();
+
+    private int pot;
+    private int maxBid;
+    private Deck deck = new Deck();
     private Player dealer;
     private Player playerTurn;
-    private ArrayList<Player> players = new ArrayList<>();
-    private ArrayList<Player> activePlayers = new ArrayList<>();
-    private ArrayList<Player> playersByHand = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
+    private List<Player> activePlayers = new ArrayList<>();
+    private List<Player> playersByHand = new ArrayList<>();
     private Round round;
     private boolean initialized = false;
     private Player potWinner = null;
-    private Player winner = null;
     private boolean finished = false;
     private boolean setProceeded = false;
     private String allFolded = "00";
     private boolean roundProceeded = false;
     private int playersToProceedRound = 0;
-    public boolean anteTaken = false;
     private String winningHand = "none";
     private int mainPotWon = 0;
 
@@ -40,21 +38,14 @@ public class Game {
 
     public Game() {}
 
-    public Game(int gameId, int gameAnte, int maxPlayers, int startingMoney, ArrayList<Player> gamePlayers) {
-        this.id = gameId;
-        this.ante = gameAnte;
-        this.maxPlayersNumber = maxPlayers;
-        this.players = gamePlayers;
-        for(Player player : players) {
-            player.setMoney(startingMoney);
-            player.setCurrentGameId(id);
-        }
-    }
-
     public void setId(int gameId) {this.id = gameId;}
 
     public int getId() {
         return id;
+    }
+
+    public int getStartingMoney() {
+        return startingMoney;
     }
 
     public void setAnte(int gameAnte) {this.ante = gameAnte;}
@@ -64,10 +55,6 @@ public class Game {
     }
 
     public void setPot(int gamePot) {this.pot = gamePot;}
-
-    public int getPot() {
-        return pot;
-    }
 
     public int getMaxBid() {
         return maxBid;
@@ -82,12 +69,6 @@ public class Game {
     public int getMaxPlayersNumber() {return this.maxPlayersNumber;}
 
     public void setStartingMoney(int money) {this.startingMoney = money;}
-
-    public int getStartingMoney() {return startingMoney;}
-
-    public Player getDealer() {
-        return dealer;
-    }
 
     public void setDealer(Player dealer) {
         this.dealer = dealer;
@@ -113,10 +94,6 @@ public class Game {
         return players.size();
     }
 
-    public void playerFolds(Player p) {
-        activePlayers.remove(p);
-    }
-
     public String isAllFolded() {
         return allFolded;
     }
@@ -129,62 +106,19 @@ public class Game {
         players.add(p);
     }
 
-    public void takeAnteFromPlayer() {
-        pot = 0;
-        //round = Round.FIRST_BETTING;
-        for(Player p : players) {
-            if(p.getMoney() != 0 ) {
-                int pMoney = p.getMoney();
-                p.setMoney(Math.max(pMoney - ante, 0));
-                p.setInPot(pMoney - p.getMoney());
-                pot += p.getInPot();
-                p.setBid(0);
-            }
-            else {
-                p.setActive(false);
-            }
-        }
-        anteTaken = true;
-    }
-
-    public void dealCardsToActivePlayers() {
-        for(Player p : activePlayers) {
-            for(int i=0; i<5; i++) {
-                p.addCard(deck.dealCard());
-            }
-            p.setHand();
-        }
-    }
-
-    public String gameInfo() {
-        String info = "";
-        info += "Round=" + round + "|Pot=" + pot + ",";
-        for(Player p : players) {
-            info += "|Player" + p.getId() + "|Money=" + p.getMoney() + "|InGame=" + p.isActive();
-            if(p.isActive()) {
-                info += "|Action=" + p.getAction() + "|InPot=" + p.getInPot() + "|Bid=" + p.getBid();
-            }
-            if(dealer.getId()==p.getId()) {
-                info += "|Dealer";
-            }
-            if(playerTurn.getId()==p.getId()) {
-                info += "|Turn";
-            }
-            info += ",";
-        }
-
-        return info;
+    public Deck getDeck() {
+        return deck;
     }
 
     public Player getPlayerAtIndex(int i) {
         return players.get(i);
     }
 
-    public ArrayList<Player> gamePlayers() {
+    public List<Player> gamePlayers() {
         return  players;
     }
 
-    public ArrayList<Player> activePlayers() {
+    public List<Player> activePlayers() {
         return  activePlayers;
     }
 
@@ -195,14 +129,6 @@ public class Game {
     public void setPotWinner(Player potWinner) {
         this.potWinner = potWinner;
     }
-
-//    public Player getWinner() {
-//        return potWinner;
-//    }
-//
-//    public void setWinner(Player potWinner) {
-//        this.potWinner = potWinner;
-//    }
 
     public boolean isFinished() {
         return finished;
@@ -248,6 +174,67 @@ public class Game {
         return winningHand;
     }
 
+    public int getPot() {
+        return pot;
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public List<Player> getPlayersByHand() {
+        return playersByHand;
+    }
+
+    public Player getDealer() {
+        return dealer;
+    }
+
+    public void takeAnteFromPlayer() {
+        pot = 0;
+        for(Player p : players) {
+            if(p.getMoney() != 0 ) {
+                int pMoney = p.getMoney();
+                p.setMoney(Math.max(pMoney - ante, 0));
+                p.setInPot(pMoney - p.getMoney());
+                pot += p.getInPot();
+                p.setBid(0);
+            }
+            else {
+                p.setActive(false);
+            }
+        }
+    }
+
+    public void dealCardsToActivePlayers() {
+        for(Player p : activePlayers) {
+            for(int i=0; i<5; i++) {
+                p.addCard(deck.dealCard());
+            }
+            p.setHand();
+        }
+    }
+
+    public String gameInfo() {
+        StringBuilder info = new StringBuilder();
+        info.append("Round=").append(round).append("|Pot=").append(pot).append(",");
+        for(Player p : players) {
+            info.append("|Player").append(p.getId()).append("|Money=").append(p.getMoney()).append("|InGame=").append(p.isActive());
+            if(p.isActive()) {
+                info.append("|Action=").append(p.getAction()).append("|InPot=").append(p.getInPot()).append("|Bid=").append(p.getBid());
+            }
+            if(dealer.getId()==p.getId()) {
+                info.append("|Dealer");
+            }
+            if(playerTurn.getId()==p.getId()) {
+                info.append("|Turn");
+            }
+            info.append(",");
+        }
+
+        return info.toString();
+    }
+
     public void addActivePlayer(Player p) {
         if (!activePlayers.contains(p)) {
             activePlayers.add(p);
@@ -273,7 +260,6 @@ public class Game {
             setPlayerTurn(players.get(1));
             giveMoneyToPlayers();
             takeAnteFromPlayer();
-            //dealCardsToActivePlayers();
             for(Player p : players) {
                 for(int i=0; i<5; i++) {
                     p.addCard(deck.dealCard());
@@ -301,11 +287,12 @@ public class Game {
             case SECOND_BETTING:
                 round = Round.COMPARING_CARDS;
                 break;
+            default:
+                break;
         }
     }
 
     public void proceedBettingRound() {
-        //System.out.println("PROCEEDING BETTING ROUND...");
         int biddingPlayersCount = 0;
         for(Player p : activePlayers) {
             if(p.isActive() && !p.getAction().equals(Player.Action.FOLD)) {
@@ -315,7 +302,6 @@ public class Game {
         if(biddingPlayersCount>1) {
             boolean areEqual = false;
             int countOfTrue = 0;
-            //TODO: WHEN 4 PLAYERS AND 1 FOLDS
             for(Player p : activePlayers) {
                 if((p.getBid()==maxBid && !p.getAction().equals(Player.Action.NONE)) || (p.getInPot()!=0 && p.getMoney()==0) || p.getAction().equals(Player.Action.FOLD)) {
                     countOfTrue++;
@@ -333,23 +319,6 @@ public class Game {
                 resetTurnOnNewPhase();
             }
             else {
-//                Player cardDealer= null;
-//                int index = 0;
-//                for(int i=0; i<activePlayers.size(); i++) {
-//                    if(activePlayers.get(i).getId()==dealer.getId()) {
-//                        cardDealer = activePlayers.get(i);
-//                        index = i;
-//                    }
-//                }
-//                index++;
-//                boolean newTurnFound = false;
-//                while(!newTurnFound) {
-//                    if(!activePlayers.get(index%activePlayers.size()).getAction().equals(Player.Action.FOLD)) {
-//                        playerTurn = activePlayers.get(index%activePlayers.size());
-//                        newTurnFound = true;
-//                    }
-//                    index++;
-//                }
                 int index=0;
                 int indexOfTurn = 0;
                 boolean newTurnFound = false;
@@ -377,7 +346,6 @@ public class Game {
                     allFolded = String.valueOf(activePlayers.get(i).getId());
                     mainPotWon = pot;
                 }
-                //activePlayers.get(i).setAction(Player.Action.NONE);
                 activePlayers.get(i).setInPot(0);
                 activePlayers.get(i).setBid(0);
                 for(int j=0; j<5; j++) {
@@ -385,56 +353,49 @@ public class Game {
                     deck.addCard(activePlayerCard);
                     activePlayers.get(i).removeCard(activePlayerCard);
                 }
-                //takeAnteFromPlayer();
                 for(int n=0; n<5; n++) {
                     activePlayers.get(i).addCard(deck.dealCard());
                 }
                 activePlayers.get(i).setHand();
                 }
 
-            Player cardDealer= null;
-            int index = 0;
-            for(int i=0; i<activePlayers.size(); i++) {
-                if(activePlayers.get(i).getId()==dealer.getId()) {
-                    cardDealer = activePlayers.get(i);
-                    index = i;
-                }
-            }
             maxBid = 0;
             pot = 0;
-            boolean newDealerFound = false;
-            index++;
-            int dealerIndex;
-            while(!newDealerFound) {
-                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-                    dealer = activePlayers.get((index) % activePlayers.size());
-                    dealerIndex = index;
-                    newDealerFound = true;
-                }
-                index++;
-            }
-            boolean newTurnFound = false;
-            while(!newTurnFound) {
-                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-                    playerTurn = activePlayers.get((index) % activePlayers.size());
-                    newTurnFound = true;
-                }
-                index++;
-            }
-            }
+            findNextDealerAndTurn();
+        }
     }
 
-//    public void proceedChangeRound() {
-//
-//    }
+    private void findNextDealerAndTurn() {
+        int index = 0;
+        for(int i=0; i<activePlayers.size(); i++) {
+            if(activePlayers.get(i).getId()==dealer.getId()) {
+                index = i;
+            }
+        }
+        boolean newDealerFound = false;
+        index++;
+        while(!newDealerFound) {
+            if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+                dealer = activePlayers.get((index) % activePlayers.size());
+                newDealerFound = true;
+            }
+            index++;
+        }
+        boolean newTurnFound = false;
+        while(!newTurnFound) {
+            if(activePlayers.get((index) % activePlayers.size()).isActive()) {
+                playerTurn = activePlayers.get((index) % activePlayers.size());
+                newTurnFound = true;
+            }
+            index++;
+        }
+    }
 
     public void resetTurnOnNewPhase() {
-        Player cardDealer;
         int index = 0;
         boolean newTurnFound = false;
         for(int i=0; i<activePlayers.size(); i++) {
             if(activePlayers.get(i).getId()==dealer.getId()) {
-                cardDealer = activePlayers.get(i);
                 index = i;
             }
         }
@@ -467,7 +428,6 @@ public class Game {
                 playerInPot++;
             }
         }
-        //TODO: DIVIDE THE POT EQUALLY
         int moneyToDivide = pot;
         for(int i=0; i<playersByHand.size(); i++) {
             if(!playersByHand.get(i).getAction().equals(Player.Action.FOLD)) {
@@ -480,8 +440,6 @@ public class Game {
                 moneyToDivide -= Math.min(moneyToDivide, playersPot*playerInPot);
             }
         }
-        //
-        //playersByHand.get(0).updateMoney(pot);
         setPot(0);
         for(Player p : players) {
             p.setInPot(0);
@@ -491,7 +449,6 @@ public class Game {
     }
 
     public void proceedAfterComparingCards() {
-        int countOfActivePlayers = 0;
         activePlayers.clear();
         for(int i=0; i<players.size(); i++) {
             if(players.get(i).getMoney()==0  && players.get(i).isActive()) {
@@ -504,60 +461,14 @@ public class Game {
                 }
             }
             if(players.get(i).isActive()) {
-                countOfActivePlayers++;
                 activePlayers.add(players.get(i));
             }
         }
         if(activePlayers.size() > 1) {
-            //new set
-            //round = Round.FIRST_BETTING;
             if(!isRoundProceeded()) {
-                Player cardDealer= null;
-                int index = 0;
-                for(int i=0; i<activePlayers.size(); i++) {
-                    if(activePlayers.get(i).getId()==dealer.getId()) {
-                        cardDealer = activePlayers.get(i);
-                        index = i;
-                    }
-                }
-                boolean newDealerFound = false;
-                index++;
-                int dealerIndex;
-                while(!newDealerFound) {
-                    if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-                        dealer = activePlayers.get((index) % activePlayers.size());
-                        dealerIndex = index;
-                        newDealerFound = true;
-                    }
-                    index++;
-                }
-                boolean newTurnFound = false;
-                while(!newTurnFound) {
-                    if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-                        playerTurn = activePlayers.get((index) % activePlayers.size());
-                        newTurnFound = true;
-                    }
-                    index++;
-                }
+                findNextDealerAndTurn();
             }
 
-//            boolean newDealerFound = false;
-//            int index = dealer.getId() + 1;
-//            while(!newDealerFound) {
-//                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-//                    dealer = activePlayers.get((index) % activePlayers.size());
-//                    newDealerFound = true;
-//                }
-//                index++;
-//            }
-//            boolean newTurnFound = false;
-//            while(!newTurnFound) {
-//                if(activePlayers.get((index) % activePlayers.size()).isActive()) {
-//                    playerTurn = activePlayers.get((index) % activePlayers.size());
-//                    newTurnFound = true;
-//                }
-//                index++;
-//            }
             for(int i=0; i<activePlayers.size(); i++) {
                 for(int j=0; j<5; j++) {
                     Card activePlayerCard = activePlayers.get(i).getCardAtIndex(0);
@@ -567,7 +478,6 @@ public class Game {
             }
             //new card deal
             maxBid = 0;
-            //takeAnteFromPlayer();
             dealCardsToActivePlayers();
             for(int n=0 ;n<activePlayers.size(); n++) {
                 activePlayers.get(n).setHand();
@@ -576,9 +486,7 @@ public class Game {
         }
         else {
             //game over
-            winner = activePlayers.get(0);
             finished = true;
-            //round = Round.GAME_OVER;
         }
     }
 }

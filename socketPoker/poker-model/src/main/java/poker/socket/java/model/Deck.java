@@ -53,13 +53,4 @@ public class Deck {
     }
 
     public int getDeckSize() {return cards.size();}
-
-    /**
-     * Prints out all cards in the Deck
-     */
-     public void printDeck() {
-         for(Card card : cards) {
-             System.out.println(card.toString());
-         }
-     }
 }

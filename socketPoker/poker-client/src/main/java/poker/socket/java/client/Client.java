@@ -1,5 +1,8 @@
 package poker.socket.java.client;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import java.io.*;
 import java.net.*;
 import java.util.LinkedHashMap;
@@ -10,11 +13,15 @@ import java.util.LinkedHashMap;
  */
 public class Client
 {
+
+    private static final Logger LOGGER = Logger.getLogger( Client.class.getName() );
+
     public static void main( String[] args ) throws IOException
     {
+        PropertyConfigurator.configure("D:\\Studia AGH\\Programowanie zaawansowane 1\\Zadanie-1\\socketPoker\\poker-client\\src\\main\\resources\\log4j.properties");
+
         if (args.length != 2) {
-            System.err.println(
-                    "Usage: java -jar poker-client-1.0-jar-with-dependencies <host name> <port number>");
+            LOGGER.info("Usage: java -jar poker-client-1.0-jar-with-dependencies <host name> <port number>");
             System.exit(1);
         }
 
@@ -27,15 +34,14 @@ public class Client
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
         ) {
-            BufferedReader stdIn =
-                    new BufferedReader(new InputStreamReader(System.in));
             String fromServer;
             String fromClient;
             LinkedHashMap<String, String> encodedFromServer;
 
             while ((fromServer = in.readLine()) != null) {
                 // encode fromServer
-                //System.out.println("Server: " + fromServer);
+                // print message from server
+                System.out.println("Server: " + fromServer);
                 encodedFromServer = ClientMessageHandler.encode(fromServer);
                 // react
                 fromClient = ClientMessageHandler.answerToMessage(encodedFromServer);
@@ -43,17 +49,15 @@ public class Client
                     break;
 
                 // get response from Client - OLD KK VERSION
-                //fromClient = stdIn.readLine();
-                if (fromClient != null) {
-                    //System.out.println("Client: " + fromClient);
-                    out.println(fromClient);
-                }
+                // print message from client
+                System.out.println("Client: " + fromClient);
+                out.println(fromClient);
             }
         } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + hostName);
+            LOGGER.info("Don't know about host " + hostName);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to " +
+            LOGGER.info("Couldn't get I/O for the connection to " +
                     hostName);
             System.exit(1);
         }

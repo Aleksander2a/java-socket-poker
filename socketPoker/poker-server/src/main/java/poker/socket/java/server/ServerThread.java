@@ -7,10 +7,10 @@ public class ServerThread extends Thread{
     private Socket socket = null;
 
     public ServerThread(Socket socket) {
-        //super();
         this.socket = socket;
     }
 
+    @Override
     public void run() {
 
         try (
@@ -19,7 +19,8 @@ public class ServerThread extends Thread{
                         new InputStreamReader(
                                 socket.getInputStream()));
         ) {
-            String inputLine, outputLine;
+            String inputLine;
+            String outputLine;
             Protocol protocol = new Protocol();
             outputLine = protocol.processInput(null);
             out.println(outputLine);

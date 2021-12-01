@@ -1,13 +1,44 @@
 package poker.socket.java.client;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import poker.socket.java.model.*;
 
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClientMessageHandler {
+
+    private static final Logger LOGGER = Logger.getLogger( ClientMessageHandler.class.getName() );
+
+    private static final String BANKRUPT = "Bankrupt";
+    private static final String MAX_BID = "MaxBid";
+    private static final String DECISION_BID_BID = "-Decision:Bid-Bid:";
+    private static final String DECISION_FOLD = "-Decision:Fold";
+    private static final String STATE_IN_GAME_PLAYER_ID = "State:IN_GAME-PlayerID:";
+    private static final String INVALID_AMOUNT_PROVIDE_NUMBER_BETWEEN = "Invalid amount. Provide number between: ";
+    private static final String HOW_MUCH_DO_YOU_WANT_TO_BID = "How much do you want to bid? ";
+    private static final String GAME_ID_KEY = "-GameID:";
+    private static final String GAME_ID = "GameID";
+    private static final String BID = "-Bid:";
+    private static final String DO_YOU_WANT_TO_PLAY_ALL_IN_YES_NO = "Do you want to play ALL-IN? (yes/no)";
+    private static final String WINNER = "Winner";
+    private static final String WHAT_DO_YOU_WANT_DO_FOLD_OR_BID = "What do you want do: Fold OR Bid ?";
+    private static final String DECISION_BID = "-Decision:Bid";
+    private static final String S_WITH_KICKER = "s with kicker ";
+    private static final String WITH_HIGH_CARD = " with high card ";
+    private static final String STATE = "State";
+    private static final String PLAYER_ID_KEY = "PlayerID:";
+    private static final String PLAYER_ID = "PlayerID";
+    private static final String DECISION_REFRESH = "Decision:refresh-";
+    private static final String ALL_FOLDED = "AllFolded";
+    private static final String MY_MONEY = "MyMoney";
+    private static final String MY_BID = "MyBid";
+    private static final String TYPE_BID_TO_BID_FROM_0 = "Type \"Bid\" to bid from 0-";
+
+    private ClientMessageHandler() {}
+
     static LinkedHashMap<String, String> encode(String input) {
         String[] elements = input.split("-");
         List<String> list = Arrays.asList(elements);
@@ -21,9 +52,10 @@ public class ClientMessageHandler {
     }
 
     static void gameInfoEncoder(String gameInfo) {
+        PropertyConfigurator.configure("D:\\Studia AGH\\Programowanie zaawansowane 1\\Zadanie-1\\socketPoker\\poker-client\\src\\main\\resources\\log4j.properties");
         String[] elements = gameInfo.split(",");
         for(String s : elements) {
-            System.out.println(s);
+            LOGGER.info(s);
         }
     }
 
@@ -36,269 +68,261 @@ public class ClientMessageHandler {
                 result += elements[0] + " of " + elements[1] + " with kicker " + elements[2];
                 break;
             case ONE_PAIR:
-                result += elements[0] + " of " + elements[1] + "s with kicker " + elements[2];
+                result += elements[0] + " of " + elements[1] + S_WITH_KICKER + elements[2];
                 break;
             case TWO_PAIRS:
                 result += elements[0] + " of " + elements[1] + "s and " + elements[2] +"s";
                 break;
             case THREE_OF_A_KIND:
-                result += elements[0] + " of " + elements[1] + "s with kicker " + elements[2];
+                result += elements[0] + " of " + elements[1] + S_WITH_KICKER + elements[2];
                 break;
             case STRAIGHT:
                 result += elements[0] + " up to " + elements[1];
                 break;
             case FLUSH:
-                result += elements[0] + " of " + elements[1] + " with high card " + elements[2];
+                result += elements[0] + " of " + elements[1] + WITH_HIGH_CARD + elements[2];
                 break;
             case FULL_HOUSE:
                 result += elements[0] + " of three " + elements[1] + "s and two " + elements[2] +"s";
                 break;
             case FOUR_OF_A_KIND:
-                result += elements[0] + " of " + elements[1] + "s with kicker " + elements[2];
+                result += elements[0] + " of " + elements[1] + S_WITH_KICKER + elements[2];
                 break;
             case STRAIGHT_FLUSH:
-                result += elements[0] + " of " + elements[1] + " with high card " + elements[2];
+                result += elements[0] + " of " + elements[1] + WITH_HIGH_CARD + elements[2];
                 break;
             case ROYAL_FLUSH:
-                result += elements[0] + " of " + elements[1] + " with high card " + elements[2];
+                result += elements[0] + " of " + elements[1] + WITH_HIGH_CARD + elements[2];
                 break;
         }
         return result;
     }
 
     static String answerToMessage(LinkedHashMap<String, String> msg) {
+        PropertyConfigurator.configure("D:\\Studia AGH\\Programowanie zaawansowane 1\\Zadanie-1\\socketPoker\\poker-client\\src\\main\\resources\\log4j.properties");
         Scanner scanner = new Scanner(System.in);
-        String answer = "";
+        StringBuilder answer = new StringBuilder();
         String inputString = "";
-        if(msg.get("State").equals("JOIN_OR_CREATE_GAME")) {
-            System.out.println("Welcome to the POKER SERVER!");
-            answer += "State:" + msg.get("State") + "-";
-            answer += "PlayerID:" + msg.get("PlayerID") + "-";
-            //System.out.println("There are " + msg.get("GameNumber") + " game(s) to join:");
+        if(msg.get(STATE).equals("JOIN_OR_CREATE_GAME")) {
+            LOGGER.info("Welcome to the POKER SERVER!");
+            answer.append("State:").append(msg.get(STATE)).append("-");
+            answer.append(PLAYER_ID_KEY).append(msg.get(PLAYER_ID)).append("-");
             Pattern gamePattern = Pattern.compile("Game[0-9]");
             Set<String> availableGames = new HashSet<>();
             for (String key : msg.keySet()) {
                 Matcher gameMatcher = gamePattern.matcher(key);
                 if(gameMatcher.find()) {
-                    //System.out.println(key + ": Max players: " + msg.get(key));
                     availableGames.add(key);
                 }
             }
             if(availableGames.isEmpty()) {
-                System.out.println("There are no games right now. Do you want to create a new game or refresh? (new/refresh)");
+                LOGGER.info("There are no games right now. Do you want to create a new game or refresh? (new/refresh)");
                 inputString = scanner.nextLine();
                 while (!inputString.equals("new") && !inputString.equals("refresh")) {
-                    System.out.println("Provide valid input: \"new\" or \"refresh\"");
+                    LOGGER.info("Provide valid input: \"new\" or \"refresh\"");
                     inputString = scanner.nextLine();
                 }
                 if(inputString.equals("new")) {
-                    answer += "Decision:new-";
+                    answer.append("Decision:new-");
                 }
                 else {
-                    answer += "Decision:refresh-";
+                    answer.append(DECISION_REFRESH);
                 }
             }
             else {
-                System.out.println("There is(are) " + msg.get("GameNumber") + " game(s) to join:");
-                for (String key : msg.keySet()) {
+                LOGGER.info("There is(are) " + msg.get("GameNumber") + " game(s) to join:");
+                for(Map.Entry<String, String> entry : msg.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
                     Matcher gameMatcher = gamePattern.matcher(key);
                     if(gameMatcher.find()) {
-                        System.out.println(key + ": Max players: " + msg.get(key));
-                        //availableGames.add(key);
+                        LOGGER.info(key + ": Max players: " + value);
                     }
                 }
-                System.out.println("Do you want to join an existing game, create new game or refresh?(join/new/refresh)");
+                LOGGER.info("Do you want to join an existing game, create new game or refresh?(join/new/refresh)");
                 inputString = scanner.nextLine();
                 while (!inputString.equals("join") && !inputString.equals("new") && !inputString.equals("refresh")) {
-                    System.out.println("Provide valid input: \"join\" or \"new\" or \"refresh\"");
+                    LOGGER.info("Provide valid input: \"join\" or \"new\" or \"refresh\"");
                     inputString = scanner.nextLine();
                 }
                 if (inputString.equals("join")) {
-                    answer += "Decision:join-";
-                    System.out.println("Which game do you want to join?");
+                    answer.append("Decision:join-");
+                    LOGGER.info("Which game do you want to join?");
                     inputString = scanner.nextLine();
                     while (!availableGames.contains(inputString)) {
-                        System.out.println("Provide a valid game that is available");
+                        LOGGER.info("Provide a valid game that is available");
                         inputString = scanner.nextLine();
                     }
                     String chosenGame = "" + inputString.charAt(4);
-                    answer += "Joins:" + chosenGame + "-";
+                    answer.append("Joins:").append(chosenGame).append("-");
                 } else if (inputString.equals("new")) {
-                    answer += "Decision:new-";
+                    answer.append("Decision:new-");
                 }
                 else {
-                    answer += "Decision:refresh-";
+                    answer.append(DECISION_REFRESH);
                 }
             }
         }
-        if(msg.get("State").equals("NEW_GAME")) {
-            answer += "State:" + msg.get("State") + "-";
-            answer += "PlayerID:" + msg.get("PlayerID") + "-";
+        if(msg.get(STATE).equals("NEW_GAME")) {
+            answer.append("State:").append(msg.get(STATE)).append("-");
+            answer.append(PLAYER_ID_KEY).append(msg.get(PLAYER_ID)).append("-");
             // Choose playerNumber
-            System.out.println("How many players do you want to play? (2-4)");
+            LOGGER.info("How many players do you want to play? (2-4)");
             inputString = scanner.nextLine();
             while (Integer.parseInt(inputString) > 4 || Integer.parseInt(inputString) < 2) {
-                System.out.println("Give a valid number from 2 to 4");
+                LOGGER.info("Give a valid number from 2 to 4");
                 inputString = scanner.nextLine();
             }
-            answer += "Players:" + inputString + "-";
+            answer.append("Players:").append(inputString).append("-");
             // Choose starting money
-            System.out.println("How much money do you want for start? (500-1500)");
-            inputString = scanner.nextLine();;
-            while (Integer.parseInt(inputString) > 1500 || Integer.parseInt(inputString) < 500) {
-                System.out.println("Give a valid number from 500 to 1500");
-                inputString = scanner.nextLine();
-            }
-            answer += "StartingMoney:" + inputString + "-";
-            // Choose ante
-            System.out.println("How much money do you want for ante? (50-150)");
-            inputString = scanner.nextLine();;
-            while (Integer.parseInt(inputString) > 150 || Integer.parseInt(inputString) < 50) {
-                System.out.println("Give a valid number from 50 to 150");
-                inputString = scanner.nextLine();
-            }
-            answer += "Ante:" + inputString + "-";
-        }
-        if(msg.get("State").equals("WAITING_FOR_PLAYERS")) {
-            int playersNeeded = Integer.parseInt(msg.get("MaxPlayers")) - Integer.parseInt(msg.get("NrOfPlayers"));
-            System.out.println("GameID: " + msg.get("GameID") + " .Waiting for " + playersNeeded + " more player(s), press ENTER to refresh");
+            LOGGER.info("How much money do you want for start? (500-1500)");
             inputString = scanner.nextLine();
-            answer = "State:WAITING_FOR_PLAYERS-PlayerID:" + msg.get("PlayerID") + "-" + "GameID:" + msg.get("GameID");
+            while (Integer.parseInt(inputString) > 1500 || Integer.parseInt(inputString) < 500) {
+                LOGGER.info("Give a valid number from 500 to 1500");
+                inputString = scanner.nextLine();
+            }
+            answer.append("StartingMoney:").append(inputString).append("-");
+            // Choose ante
+            LOGGER.info("How much money do you want for ante? (50-150)");
+            inputString = scanner.nextLine();
+            while (Integer.parseInt(inputString) > 150 || Integer.parseInt(inputString) < 50) {
+                LOGGER.info("Give a valid number from 50 to 150");
+                inputString = scanner.nextLine();
+            }
+            answer.append("Ante:").append(inputString).append("-");
         }
-        if(msg.get("State").equals("IN_GAME")) {
-            //TODO: receives info about game and reacts accordingly
+        if(msg.get(STATE).equals("WAITING_FOR_PLAYERS")) {
+            int playersNeeded = Integer.parseInt(msg.get("MaxPlayers")) - Integer.parseInt(msg.get("NrOfPlayers"));
+            LOGGER.info("GameID: " + msg.get(GAME_ID) + " .Waiting for " + playersNeeded + " more player(s), press ENTER to refresh");
+            scanner.nextLine();
+            answer = new StringBuilder("State:WAITING_FOR_PLAYERS-PlayerID:" + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID));
+        }
+        if(msg.get(STATE).equals("IN_GAME")) {
             Game.Round gameRound = Game.Round.valueOf(msg.get("GameRound"));
             ArrayList<Card> playerCards = new ArrayList<>();
-            if(msg.containsKey("AllFolded")) {
-                if(!msg.get("AllFolded").equals("00")) {
-                    System.out.println("Player" + msg.get("AllFolded") + " wins the pot of " + msg.get("MainPotWon") + " as everyone else folded! Starting new set...");
-                }
+            if(msg.containsKey(ALL_FOLDED) && !msg.get(ALL_FOLDED).equals("00")) {
+                LOGGER.info("Player" + msg.get(ALL_FOLDED) + " wins the pot, as everyone else folded! Starting new set...");
             }
-            if(!msg.containsKey("Bankrupt") && !msg.containsKey("Winner")) {
+            if(!msg.containsKey(BANKRUPT) && !msg.containsKey(WINNER)) {
                 gameInfoEncoder(msg.get("GameInfo"));
-                System.out.println("Your cards:");
+                LOGGER.info("Your cards:");
                 Pattern cardPattern = Pattern.compile("Card[0-4]");
-                String handToPrint = "|";
-                for (String key : msg.keySet()) {
+                StringBuilder handToPrint = new StringBuilder("|");
+                for(Map.Entry<String, String> entry : msg.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
                     Matcher cardMatcher = cardPattern.matcher(key);
                     if (cardMatcher.find()) {
-                        String[] cardInfo = msg.get(key).split(",");
-                        handToPrint += cardInfo[0] + " " + cardInfo[1] + "|";
-                        playerCards.add(new Card(msg.get(key)));
+                        String[] cardInfo = value.split(",");
+                        handToPrint.append(cardInfo[0]).append(" ").append(cardInfo[1]).append("|");
+                        playerCards.add(new Card(value));
                     }
                 }
-                System.out.println(handToPrint);
-                System.out.println("Your hand is:");
-                System.out.println(handRankEncoder(msg.get("PlayerHandRank")));
+                LOGGER.info(handToPrint.toString());
+                LOGGER.info("Your hand is:");
+                LOGGER.info(handRankEncoder(msg.get("PlayerHandRank")));
 
             }
-            if(!gameRound.equals(Game.Round.COMPARING_CARDS) && !msg.get("Turn").equals(msg.get("PlayerID"))) {
-                System.out.println("NOT your turn! Press ENTER to refresh");
-                inputString = scanner.nextLine();
-                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-                        + "-Decision:Refresh";
-                return answer;
+            if(!gameRound.equals(Game.Round.COMPARING_CARDS) && !msg.get("Turn").equals(msg.get(PLAYER_ID))) {
+                LOGGER.info("NOT your turn! Press ENTER to refresh");
+                scanner.nextLine();
+                answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID)
+                        + "-Decision:Refresh");
+                return answer.toString();
             }
             switch (gameRound) {
                 case FIRST_BETTING:
-                    System.out.println("Your turn!");
-                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID");
-                    //if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyBid"))) {}
-                    //if(msg.get("MyAction").equals("NONE")) {
-                    //TODO: Game verifies if the player needs to make a move
-                    //int maxBidDiffMyBid = Integer.parseInt(msg.get("MaxBid")) - Integer.parseInt(msg.get("MyBid"));
+                    LOGGER.info("Your turn!");
+                    answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID));
                     int minBid = 0;
-                    int maxBid = Integer.parseInt(msg.get("MaxBid"));
-                    int myMoney = Integer.parseInt(msg.get("MyMoney"));
-                    int myBid = Integer.parseInt(msg.get("MyBid"));
-                    if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) {
-                        minBid = Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"));
+                    int maxBid = Integer.parseInt(msg.get(MAX_BID));
+                    int myMoney = Integer.parseInt(msg.get(MY_MONEY));
+                    int myBid = Integer.parseInt(msg.get(MY_BID));
+                    if(Integer.parseInt(msg.get(MAX_BID)) > Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))) {
+                        minBid = Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID));
                     }
                     else {
-                        minBid = Integer.parseInt(msg.get("MaxBid"));
+                        minBid = Integer.parseInt(msg.get(MAX_BID));
                     }
                     if(myBid == maxBid) {
-                        answer += "-Decision:Bid";
-                        System.out.println("Type \"Bid\" to bid from 0-" + (myMoney+myBid));
+                        answer.append(DECISION_BID);
+                        LOGGER.info(TYPE_BID_TO_BID_FROM_0 + (myMoney+myBid));
                         inputString = scanner.nextLine();
                         while(!inputString.equals("Bid")) {
-                            System.out.println("Type \"Bid\" to bid from 0-" + (myMoney+myBid));
+                            LOGGER.info(TYPE_BID_TO_BID_FROM_0 + (myMoney+myBid));
                             inputString = scanner.nextLine();
                         }
-                        System.out.println("How much do you want to bid? " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                        LOGGER.info(HOW_MUCH_DO_YOU_WANT_TO_BID + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                         inputString = scanner.nextLine();
-                        while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) || Integer.parseInt(inputString) < minBid)) {
-                            System.out.println("Invalid amount. Provide number between: " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                        while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))) || Integer.parseInt(inputString) < minBid)) {
+                            LOGGER.info(INVALID_AMOUNT_PROVIDE_NUMBER_BETWEEN + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                             inputString = scanner.nextLine();
                         }
-                        answer += "-Bid:" + inputString;
+                        answer.append(BID).append(inputString);
                     }
                     else if(myMoney==0) {
-                        answer += "-Decision:Bid-Bid:" + myBid;
+                        answer.append(DECISION_BID_BID).append(myBid);
                     }
                     else if(maxBid > myBid + myMoney) {
-                        System.out.println("Do you want to play ALL-IN? (yes/no)");
+                        LOGGER.info(DO_YOU_WANT_TO_PLAY_ALL_IN_YES_NO);
                         inputString = scanner.nextLine();
                         while(!inputString.equals("yes") && !inputString.equals("no")) {
-                            System.out.println("Do you want to play ALL-IN? (yes/no)");
+                            LOGGER.info(DO_YOU_WANT_TO_PLAY_ALL_IN_YES_NO);
                             inputString = scanner.nextLine();
                         }
                         if(inputString.equals("yes")) {
-                            answer += "-Decision:Bid-Bid:" + (myBid + myMoney);
+                            answer.append(DECISION_BID_BID).append(myBid + myMoney);
                         }
                         else {
-                            answer += "-Decision:Fold";
+                            answer.append(DECISION_FOLD);
                         }
                     }
                     else {
-                        System.out.println("What do you want do: Fold OR Bid ?");
+                        LOGGER.info(WHAT_DO_YOU_WANT_DO_FOLD_OR_BID);
                         inputString = scanner.nextLine();
                         while (!inputString.equals("Fold") && !inputString.equals("Bid")) {
-                            System.out.println("What do you want do: Fold OR Bid ?");
+                            LOGGER.info(WHAT_DO_YOU_WANT_DO_FOLD_OR_BID);
                             inputString = scanner.nextLine();
                         }
                         switch (inputString) {
-//                               case "Check":
-//                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-//                                            + "-Decision:Check";
-//                                    break;
                             case "Fold":
-                                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-                                        + "-Decision:Fold";
+                                answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID)
+                                        + DECISION_FOLD);
                                 break;
                             case "Bid":
-                                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-                                        + "-Decision:Bid";
-                                System.out.println("How much do you want to bid? " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                                answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID)
+                                        + DECISION_BID);
+                                LOGGER.info(HOW_MUCH_DO_YOU_WANT_TO_BID + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                                 inputString = scanner.nextLine();
-                                while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) || Integer.parseInt(inputString) < minBid)) {
-                                    System.out.println("Invalid amount. Provide number between: " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                                while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))) || Integer.parseInt(inputString) < minBid)) {
+                                    LOGGER.info(INVALID_AMOUNT_PROVIDE_NUMBER_BETWEEN + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                                     inputString = scanner.nextLine();
                                 }
-                                answer += "-Bid:" + inputString;
+                                answer.append(BID).append(inputString);
+                                break;
+                            default:
                                 break;
                         }
                     }
                     break;
                 case CHANGE_CARDS:
-                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID");
-                    System.out.println("How many cards do you want to change? (0-5)");
+                    answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID));
+                    LOGGER.info("How many cards do you want to change? (0-5)");
                     inputString = scanner.nextLine();
                     while(Integer.parseInt(inputString) > 5 || Integer.parseInt(inputString) < 0) {
-                        System.out.println("Invalid amount. Provide number between (0-5) ");
+                        LOGGER.info("Invalid amount. Provide number between (0-5) ");
                         inputString = scanner.nextLine();
                     }
-                    answer += "-Decision:" + inputString;
+                    answer.append("-Decision:").append(inputString);
                     int nrOfCardsToChange = Integer.parseInt(inputString);
                     for(int i=0; i<nrOfCardsToChange; i++) {
                         boolean validCard = false;
-                        System.out.println("What card do you want to change? (RANK SUIT)");
+                        LOGGER.info("What card do you want to change? (RANK SUIT)");
                         inputString = scanner.nextLine();
-                        //TODO: Handle invalid input
                         Pattern validCardPattern = Pattern.compile("[A-Za-z] [A-Za-z]");
                         Matcher validMatcher = validCardPattern.matcher(inputString);
                         while(!validMatcher.find()) {
-                            System.out.println("Invalid input. Try again. (RANK SUIT)");
+                            LOGGER.info("Invalid input. Try again. (RANK SUIT)");
                             inputString = scanner.nextLine();
                             validMatcher = validCardPattern.matcher(inputString);
                         }
@@ -310,12 +334,11 @@ public class ClientMessageHandler {
                             }
                         }
                         while(!validCard) {
-                            System.out.println("No such card. Provide a card that you have");
+                            LOGGER.info("No such card. Provide a card that you have");
                             inputString = scanner.nextLine();
-                            //TODO: Handle invalid input
                             validMatcher = validCardPattern.matcher(inputString);
                             while(!validMatcher.find()) {
-                                System.out.println("Invalid input. Try again. (RANK SUIT)");
+                                LOGGER.info("Invalid input. Try again. (RANK SUIT)");
                                 inputString = scanner.nextLine();
                                 validMatcher = validCardPattern.matcher(inputString);
                             }
@@ -327,160 +350,139 @@ public class ClientMessageHandler {
                                 }
                             }
                         }
-                        //Add info on cards to change to answer
-                        answer += "-ToChange" + i + ":" + cardInput[0] + "," + cardInput[1];
+                        // Add info on cards to change to answer
+                        answer.append("-ToChange").append(i).append(":").append(cardInput[0]).append(",").append(cardInput[1]);
                     }
                     break;
                 case SECOND_BETTING:
-                    System.out.println("Your turn!");
-                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID");
-                    //if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyBid"))) {}
-                    //if(msg.get("MyAction").equals("NONE")) {
-                    //TODO: Game verifies if the player needs to make a move
-                    //int maxBidDiffMyBid = Integer.parseInt(msg.get("MaxBid")) - Integer.parseInt(msg.get("MyBid"));
-                    maxBid = Integer.parseInt(msg.get("MaxBid"));
-                    myMoney = Integer.parseInt(msg.get("MyMoney"));
-                    myBid = Integer.parseInt(msg.get("MyBid"));
-                    if(Integer.parseInt(msg.get("MaxBid")) > Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) {
-                        minBid = Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"));
+                    LOGGER.info("Your turn!");
+                    answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID));
+                    maxBid = Integer.parseInt(msg.get(MAX_BID));
+                    myMoney = Integer.parseInt(msg.get(MY_MONEY));
+                    myBid = Integer.parseInt(msg.get(MY_BID));
+                    if(Integer.parseInt(msg.get(MAX_BID)) > Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))) {
+                        minBid = Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID));
                     }
                     else {
-                        minBid = Integer.parseInt(msg.get("MaxBid"));
+                        minBid = Integer.parseInt(msg.get(MAX_BID));
                     }
                     if(myBid == maxBid) {
-                        answer += "-Decision:Bid";
-                        System.out.println("Type \"Bid\" to bid from 0-" + (myMoney+myBid));
+                        answer.append(DECISION_BID);
+                        LOGGER.info(TYPE_BID_TO_BID_FROM_0 + (myMoney+myBid));
                         inputString = scanner.nextLine();
                         while(!inputString.equals("Bid")) {
-                            System.out.println("Type \"Bid\" to bid from 0-" + (myMoney+myBid));
+                            LOGGER.info(TYPE_BID_TO_BID_FROM_0 + (myMoney+myBid));
                             inputString = scanner.nextLine();
                         }
-                        System.out.println("How much do you want to bid? " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                        LOGGER.info(HOW_MUCH_DO_YOU_WANT_TO_BID + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                         inputString = scanner.nextLine();
-                        while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) || Integer.parseInt(inputString) < minBid)) {
-                            System.out.println("Invalid amount. Provide number between: " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                        while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))) || Integer.parseInt(inputString) < minBid)) {
+                            LOGGER.info(INVALID_AMOUNT_PROVIDE_NUMBER_BETWEEN + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                             inputString = scanner.nextLine();
                         }
-                        answer += "-Bid:" + inputString;
+                        answer.append(BID).append(inputString);
                     }
                     else if(myMoney==0) {
-                        answer += "-Decision:Bid-Bid:" + myBid;
+                        answer.append(DECISION_BID_BID).append(myBid);
                     }
                     else if(maxBid > myBid + myMoney) {
-                        System.out.println("Do you want to play ALL-IN? (yes/no)");
+                        LOGGER.info(DO_YOU_WANT_TO_PLAY_ALL_IN_YES_NO);
                         inputString = scanner.nextLine();
                         while(!inputString.equals("yes") && !inputString.equals("no")) {
-                            System.out.println("Do you want to play ALL-IN? (yes/no)");
+                            LOGGER.info(DO_YOU_WANT_TO_PLAY_ALL_IN_YES_NO);
                             inputString = scanner.nextLine();
                         }
                         if(inputString.equals("yes")) {
-                            answer += "-Decision:Bid-Bid:" + (myBid + myMoney);
+                            answer.append(DECISION_BID_BID).append(myBid + myMoney);
                         }
                         else {
-                            answer += "-Decision:Fold";
+                            answer.append(DECISION_FOLD);
                         }
                     }
                     else {
-                        System.out.println("What do you want do: Fold OR Bid ?");
+                        LOGGER.info(WHAT_DO_YOU_WANT_DO_FOLD_OR_BID);
                         inputString = scanner.nextLine();
                         while (!inputString.equals("Fold") && !inputString.equals("Bid")) {
-                            System.out.println("What do you want do: Fold OR Bid ?");
+                            LOGGER.info(WHAT_DO_YOU_WANT_DO_FOLD_OR_BID);
                             inputString = scanner.nextLine();
                         }
                         switch (inputString) {
-//                               case "Check":
-//                                    answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-//                                            + "-Decision:Check";
-//                                    break;
                             case "Fold":
-                                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-                                        + "-Decision:Fold";
+                                answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID)
+                                        + DECISION_FOLD);
                                 break;
                             case "Bid":
-                                answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID")
-                                        + "-Decision:Bid";
-                                System.out.println("How much do you want to bid? " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                                answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID)
+                                        + DECISION_BID);
+                                LOGGER.info(HOW_MUCH_DO_YOU_WANT_TO_BID + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                                 inputString = scanner.nextLine();
-                                while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))) || Integer.parseInt(inputString) < minBid)) {
-                                    System.out.println("Invalid amount. Provide number between: " + minBid + "-" + (Integer.parseInt(msg.get("MyMoney")) + Integer.parseInt(msg.get("MyBid"))));
+                                while (inputString.equals("") || (Integer.parseInt(inputString) > (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))) || Integer.parseInt(inputString) < minBid)) {
+                                    LOGGER.info(INVALID_AMOUNT_PROVIDE_NUMBER_BETWEEN + minBid + "-" + (Integer.parseInt(msg.get(MY_MONEY)) + Integer.parseInt(msg.get(MY_BID))));
                                     inputString = scanner.nextLine();
                                 }
-                                answer += "-Bid:" + inputString;
+                                answer.append(BID).append(inputString);
+                                break;
+                            default:
                                 break;
                         }
                     }
                     break;
-//                case SET_OVER:
-//                    System.out.println();
-//                    break;
                 case COMPARING_CARDS:
-                    if(msg.containsKey("Bankrupt")) {
-                        if(msg.get("Bankrupt").equals("Yes")) {
-                            System.out.println("You are out of the game! Want to play again? (yes/no)");
+                    if(msg.containsKey(BANKRUPT) && msg.get(BANKRUPT).equals("Yes")) {
+                        LOGGER.info("You are out of the game! Want to play again? (yes/no)");
                             inputString = scanner.nextLine();
                             while(!inputString.equals("yes") && !inputString.equals("no")) {
-                                System.out.println("Want to play again? (yes/no)");
+                                LOGGER.info("Want to play again? (yes/no)");
                                 inputString = scanner.nextLine();
                             }
                             if(inputString.equals("yes")) {
                                 //go to join/create game
-                                answer += "State:JOIN_OR_CREATE_GAME-";
-                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
-                                answer += "Decision:refresh-";
-                                return answer;
+                                answer.append("State:JOIN_OR_CREATE_GAME-");
+                                answer.append(PLAYER_ID_KEY).append(msg.get(PLAYER_ID)).append("-");
+                                answer.append(DECISION_REFRESH);
+                                return answer.toString();
                             }
                             else {
-                                System.out.println("Bye");
-                                answer = "Quit";
-//                                answer += "State:JOIN_OR_CREATE_GAME-";
-//                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
-//                                answer += "Decision:quit-";
-                                //System.out.println("Bye");
-                                //System.exit(0);
-                                return answer;
+                                LOGGER.info("Bye");
+                                answer = new StringBuilder("Quit");
+                                return answer.toString();
                             }
-                        }
                     }
-                    if(msg.containsKey("Winner")) {
-                        if(msg.get("Winner").equals("Yes")) {
-                            System.out.println("You won the game! Want to play again? (yes/no)");
+                    if(msg.containsKey(WINNER) && msg.get(WINNER).equals("Yes")) {
+                        LOGGER.info("You won the game! Want to play again? (yes/no)");
                             inputString = scanner.nextLine();
                             while(!inputString.equals("yes") && !inputString.equals("no")) {
-                                System.out.println("Want to play again? (yes/no)");
+                                LOGGER.info("Want to play again? (yes/no)");
                                 inputString = scanner.nextLine();
                             }
                             if(inputString.equals("yes")) {
-                                answer += "State:JOIN_OR_CREATE_GAME-";
-                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
-                                answer += "Decision:refresh-";
-                                return answer;
+                                answer.append("State:JOIN_OR_CREATE_GAME-");
+                                answer.append(PLAYER_ID_KEY).append(msg.get(PLAYER_ID)).append("-");
+                                answer.append(DECISION_REFRESH);
+                                return answer.toString();
                             }
                             else {
-                                System.out.println("Bye");
-                                answer = "Quit";
-//                                answer += "State:JOIN_OR_CREATE_GAME-";
-//                                answer += "PlayerID:" + msg.get("PlayerID") + "-";
-//                                answer += "Decision:quit-";
-                                //System.out.println("Bye");
-                                //System.exit(0);
-                                return answer;
+                                LOGGER.info("Bye");
+                                answer = new StringBuilder("Quit");
+                                return answer.toString();
                             }
-                        }
                     }
                     if(!msg.containsKey("PotWinner")) {
-                        answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID") + "-Decision:Unseen";
-                        System.out.println("Show off your cards! Press ENTER to continue");
-                        inputString = scanner.nextLine();
+                        answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID) + "-Decision:Unseen");
+                        LOGGER.info("Show off your cards! Press ENTER to continue");
+                        scanner.nextLine();
                     }
                     else {
-                        System.out.println("Player" + msg.get("PotWinner") + " won the main pot of " + msg.get("MainPotWon") + " with " + handRankEncoder(msg.get("WinnerHand")) + "!");
-                        System.out.println("Press ENTER to continue");
-                        inputString = scanner.nextLine();
-                        answer = "State:IN_GAME-PlayerID:" + msg.get("PlayerID") + "-GameID:" + msg.get("GameID") + "-Decision:Seen";
+                        LOGGER.info("Player" + msg.get("PotWinner") + " won the main pot with " + handRankEncoder(msg.get("WinnerHand")) + "!");
+                        LOGGER.info("Press ENTER to continue");
+                        scanner.nextLine();
+                        answer = new StringBuilder(STATE_IN_GAME_PLAYER_ID + msg.get(PLAYER_ID) + GAME_ID_KEY + msg.get(GAME_ID) + "-Decision:Seen");
                     }
+                    break;
+                default:
                     break;
             }
         }
-        return answer;
+        return answer.toString();
     }
 }

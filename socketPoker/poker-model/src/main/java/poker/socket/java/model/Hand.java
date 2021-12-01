@@ -6,14 +6,14 @@ public class Hand {
     private Ranking ranking;
     private Card leadingCard;
     private Card kicker;
-    private ArrayList<Card> playerCards;
+    private List<Card> playerCards;
 
     public enum Ranking {
         HIGH_CARD, ONE_PAIR, TWO_PAIRS, THREE_OF_A_KIND, STRAIGHT, FLUSH, FULL_HOUSE,
         FOUR_OF_A_KIND, STRAIGHT_FLUSH, ROYAL_FLUSH
     }
 
-    public Hand(ArrayList<Card> cards) {
+    public Hand(List<Card> cards) {
         playerCards = cards;
         ranking = Ranking.HIGH_CARD;
         leadingCard = cards.get(4);
@@ -128,7 +128,7 @@ public class Hand {
                 }
             }
         }
-        if(toReturn == true) {
+        if(toReturn) {
             ranking = Ranking.STRAIGHT;
             leadingCard = playerCards.get(4);
             kicker = playerCards.get(3);
@@ -149,18 +149,13 @@ public class Hand {
         return true;
     }
 
-    //// TODO:
     boolean hasFullHouse() {
         if(hasOnePair()) {
             Card pair = leadingCard;
-            if(hasThreeOfAKind()) {
-                Card three = leadingCard;
-                if(three.compareRankWith(pair) != 0) {
+            if(hasThreeOfAKind() && leadingCard.compareRankWith(pair) != 0) {
                     ranking = Ranking.FULL_HOUSE;
-                    leadingCard = three;
                     kicker = pair;
                     return true;
-                }
             }
         }
         return false;
@@ -273,38 +268,6 @@ public class Hand {
                 result += ranking + "," + leadingCard.getSuit() + "," + leadingCard.getRank();
                 break;
         }
-//        switch (ranking) {
-//            case HIGH_CARD:
-//                result += ranking + " of " + leadingCard.getRank() + "with kicker " + kicker.getRank();
-//                break;
-//            case ONE_PAIR:
-//                result += ranking + " of " + leadingCard.getRank() + "s with kicker " + kicker.getRank();
-//                break;
-//            case TWO_PAIRS:
-//                result += ranking + " of " + leadingCard.getRank() + "s and " + kicker.getRank() +"s";
-//                break;
-//            case THREE_OF_A_KIND:
-//                result += ranking + " of " + leadingCard.getRank() + "s with kicker " + kicker.getRank();
-//                break;
-//            case STRAIGHT:
-//                result += ranking + " up to " + leadingCard.getRank();
-//                break;
-//            case FLUSH:
-//                result += ranking + " of " + leadingCard.getSuit() + " with high card " + leadingCard.getRank();
-//                break;
-//            case FULL_HOUSE:
-//                result += ranking + " of three " + leadingCard.getRank() + "s and two " + kicker.getRank() +"s";
-//                break;
-//            case FOUR_OF_A_KIND:
-//                result += ranking + " of " + leadingCard.getRank() + "s with kicker " + kicker.getRank();
-//                break;
-//            case STRAIGHT_FLUSH:
-//                result += ranking + " of " + leadingCard.getSuit() + " with high card " + leadingCard.getRank();
-//                break;
-//            case ROYAL_FLUSH:
-//                result += ranking + " of " + leadingCard.getSuit() + " with high card " + leadingCard.getRank();
-//                break;
-//        }
         return result;
     }
 

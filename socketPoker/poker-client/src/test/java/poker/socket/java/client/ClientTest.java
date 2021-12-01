@@ -11,9 +11,13 @@ public class ClientTest
     /**
      * Rigorous Test :-)
      */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        Assert.assertTrue( true );
-    }
+//    @Test
+//    public void clientMain() {
+//        String[] clientArgs = {"hostName", "0000"};
+//        try {
+//            Client.main(clientArgs);
+//        }
+//        catch (Exception ignored) {}
+//        Assert.assertTrue( true );
+//    }
 }
