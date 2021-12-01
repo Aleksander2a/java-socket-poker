@@ -24,7 +24,7 @@ public class Client
      */
     public static void main( String[] args ) throws IOException
     {
-        PropertyConfigurator.configure("D:\\Studia AGH\\Programowanie zaawansowane 1\\Zadanie-1\\socketPoker\\poker-client\\src\\main\\resources\\log4j.properties");
+        PropertyConfigurator.configure("src/main/resources/log4j.properties");
 
         if (args.length != 2) {
             LOGGER.info("Usage: java -jar poker-client-1.0-jar-with-dependencies <host name> <port number>");
