@@ -4,13 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit test for simple Server.
+ * Unit test for ServerThread.
  */
 public class ServerThreadTest
 {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void shouldAnswerWithTrue()
     {

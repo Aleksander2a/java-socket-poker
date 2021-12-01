@@ -6,12 +6,9 @@ import org.junit.Test;
 import java.util.LinkedHashMap;
 
 /**
- * Unit test for simple Server.
+ * Unit test for ServerMessageHandler.
  */
 public class ServerMessageHandlerTest {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void encodeTest() {
         String s = "State:JOIN_OR_CREATE_GAME-PlayerID:0-Decision:refresh-";
@@ -35,11 +32,5 @@ public class ServerMessageHandlerTest {
         //Assert.assertTrue(true);
         Assert.assertEquals("State:WAITING_FOR_PLAYERS-PlayerID:0-GameID:0-NrOfPlayers:0-MaxPlayers:2", answer);
     }
-//    @Test
-//    public void answerToMessageTest3() {
-//        String fromClient = " State:JOIN_OR_CREATE_GAME-PlayerID:1-Decision:join-Joins:0-";
-//        LinkedHashMap<String, String> encodedFromClient = ServerMessageHandler.encode(fromClient);
-//        ServerMessageHandler.answerToMessage(encodedFromClient);
-//        Assert.assertTrue(true);
-//    }
+
 }

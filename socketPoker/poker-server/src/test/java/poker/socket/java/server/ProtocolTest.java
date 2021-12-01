@@ -4,12 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit test for simple Server.
+ * Unit test for Protocol.
  */
 public class ProtocolTest {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void protocolTest() {
         Assert.assertTrue( true );

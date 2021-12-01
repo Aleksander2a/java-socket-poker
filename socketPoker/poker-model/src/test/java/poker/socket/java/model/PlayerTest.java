@@ -3,6 +3,9 @@ package poker.socket.java.model;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Unit test for Player.
+ */
 public class PlayerTest {
     private final Player player = new Player();
     private final Deck deck = new Deck();

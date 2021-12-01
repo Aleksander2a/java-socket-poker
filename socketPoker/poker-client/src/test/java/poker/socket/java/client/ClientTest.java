@@ -8,9 +8,6 @@ import org.junit.Test;
  */
 public class ClientTest
 {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void clientTest() {
         Assert.assertTrue( true );

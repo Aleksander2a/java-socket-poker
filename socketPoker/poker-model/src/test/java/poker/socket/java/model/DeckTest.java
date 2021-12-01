@@ -4,12 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit test for simple App.
+ * Unit test for Deck.
  */
 public class DeckTest {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void shouldAnswerWithTrue()
     {

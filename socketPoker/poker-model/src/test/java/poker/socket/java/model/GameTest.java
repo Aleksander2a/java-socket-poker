@@ -7,6 +7,9 @@ import org.junit.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Unit test for Game.
+ */
 public class GameTest {
 
     Game game = new Game();

@@ -4,12 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit test for simple Server.
+ * Unit test for Server.
  */
 public class ServerTest {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void shouldAnswerWithTrue()
     {

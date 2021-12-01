@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import org.junit.Assert;
 
+/**
+ * Unit test for Hand.
+ */
 public class HandTest {
     private final Player player = new Player();
     private final Deck deck = new Deck();
