@@ -77,7 +77,7 @@ If the game is over for you, you can create or join another game, just like
 at the beginning.
 
 ## Communication protocol
-The communication is based on key:value pairs, separated by ``-``.
+The communication is based on key:value pairs, separated by ``-`` and implemented using LinkedHashMap.
 Example:
 ```State:IN_GAME-Round:FIRST_BETTING-PlayerID:0-GameID:0```
 Both client and server have dedicated classes (ClientMessageHandler and ServerMessageHandler)
