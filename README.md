@@ -2,7 +2,7 @@
 This is an implementation of 5-card poker, with two betting rounds, with a round to change cards between them.
 ## How to run
 In main directory, run ``mvn clean package`` to build the project. 
-Then go to ``socketPoker/poker-server`` directory start server with command<br>
+Then go to ``socketPoker/poker-server`` directory and start server with command<br>
 ````java -jar ./target/poker-server-1.0-jar-with-dependencies.jar <port number>```` <br>
 (choose a valid `<port number>`, e.g. 4444).
 You will be shown a welcome message with the name of the host, that you will need to
