@@ -78,8 +78,8 @@ at the beginning.
 
 ## Communication protocol
 The communication is based on key:value pairs, separated by ``-`` and implemented using LinkedHashMap.
-<br>Example:
-```State:IN_GAME-Round:FIRST_BETTING-PlayerID:0-GameID:0```
+<br>Example:<br>
+```State:IN_GAME-Round:FIRST_BETTING-PlayerID:0-GameID:0```<br>
 Both client and server have dedicated classes (ClientMessageHandler and ServerMessageHandler)
 to encode this type of message to communicate with user in a more 'friendly' way and act 
 accordingly to user input and current game phase.
