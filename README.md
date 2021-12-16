@@ -1,17 +1,29 @@
 # Java Socket Poker
 This is an implementation of 5-card poker, with two betting rounds, with a round to change cards between them.
 ## How to run
-In main directory, run ``mvn clean package`` to build the project. 
-Then go to ``socketPoker/poker-server`` directory and start server with command<br>
-````java -jar ./target/poker-server-1.0-jar-with-dependencies.jar <port number>```` <br>
+In main directory, run 
+```
+mvn clean package
+```
+to build the project. 
+Then go to ``socketPoker/poker-server`` directory and start server with command
+```
+java -jar ./target/poker-server-1.0-jar-with-dependencies.jar <port number>
+```
 (choose a valid `<port number>`, e.g. 4444).
 You will be shown a welcome message with the name of the host, that you will need to
 provide when starting client.<br>
 Message will be something like:
 ```Welcome to server: DESKTOP-C4BFC07```, note that ``DESKTOP-C4BFC07``
 is the host name.
-Now, for every player in the game, run <br>```java -jar ./target/poker-client-1.0-jar-with-dependencies.jar <host name> <port number>```<br>
-Following previous examples, your command should be <br>```java -jar ./target/poker-client-1.0-jar-with-dependencies.jar DESKTOP-C4BFC07 4444```
+Now, for every player in the game, run
+```
+java -jar ./target/poker-client-1.0-jar-with-dependencies.jar <host name> <port number>
+```
+Following previous examples, your command should be 
+```
+java -jar ./target/poker-client-1.0-jar-with-dependencies.jar DESKTOP-C4BFC07 4444
+```
 
 If everything went well, you will be getting ready to play!
 
