@@ -14,7 +14,10 @@ java -jar ./target/poker-server-1.0-jar-with-dependencies.jar <port number>
 You will be shown a welcome message with the name of the host, that you will need to
 provide when starting client.<br>
 Message will be something like:
-```Welcome to server: DESKTOP-C4BFC07```, note that ``DESKTOP-C4BFC07``
+```
+Welcome to server: DESKTOP-C4BFC07
+``` 
+note that ``DESKTOP-C4BFC07``
 is the host name.
 Now, for every player in the game, run
 ```
